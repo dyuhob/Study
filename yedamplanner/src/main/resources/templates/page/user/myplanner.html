@@ -24,7 +24,7 @@
                                 <div class="accordion-body" th:each="prmap : ${info.prvo}">
                                     <!-- 플래너 리뷰 -->
                                     <h3>플래너 후기</h3>
-                                    <div  th:data-planId="${prmap.planId}">
+                                    <div th:data-planId="${info.planId}">
                                         <input type="hidden" class="planReviewId" th:value="${prmap.planReviewId}">
                                         <textarea class="form-control bg_input" rows="6" th:text="${prmap.content}"></textarea>
                                         평점<input type="number" min="0" max="5" class="prStar" th:value="${prmap.prStar}">
@@ -37,7 +37,7 @@
                                     <h3> 멤버 후기 </h3>
                                     <br>
                                     <div th:each="mrvo : ${info.mrList}" class="memberReviewDiv">
-                                       <div th:each="mrmap : ${mrvo}" th:data-planId="${prmap.planId}" class="mrPlanId">
+                                       <div th:each="mrmap : ${mrvo}" th:data-planId="${info.planId}" class="mrPlanId">
                                         <input type="hidden" class="mrKey" th:value="${mrmap.mrKey}">
                                             <h4 th:text="${mrmap.memberId}" class="mrSubject" ></h4>
                                             <p>한줄평</p>
@@ -57,9 +57,7 @@
                         </div>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
     <div class="go-top">

@@ -5,10 +5,9 @@ let mrBtns = document.querySelectorAll('.memberInsert')
 for(let prBtn of prBtns){
     prBtn.addEventListener('click', function(){
         let Content = this.parentElement.querySelector('textarea').value
-        let planId = this.parentElement.dataset.planId
+        let planId = this.parentElement.getAttribute('data-planId')
         let prStar = this.parentElement.querySelector('.prStar').value
         let planReviewId = this.parentElement.querySelector('.planReviewId').value
-        console.log(planId)
         
         fetch("/user/insertplannerreview", {
             method: "POST",
@@ -25,15 +24,14 @@ for(let prBtn of prBtns){
           .then((response) => response.json())
           .then((result) => {
             if(result.result == "success"){
-                alert('성공')
+                swal('성공')
                 location.href = "/user/myplanner"
             } else if(result.result == "fail"){
-                alert('실패')
+                swal('실패')
             }
 
           })
           .catch(reject => console.log(reject));
-          
 
     })    
 }
@@ -64,10 +62,10 @@ for(let mrBtn of mrBtns){
           .then((response) => response.json())
           .then((result) => {
             if(result.result == "success"){
-                alert('성공')
+                swal('성공')
                 location.href = "/user/myplanner"
             } else if(result.result == "fail"){
-                alert('실패')
+                swal('실패')
             }
 
           })

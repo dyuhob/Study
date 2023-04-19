@@ -19,6 +19,7 @@ var chart2;
 
 // 주가 그래프 DB 조회 + 차트 함수 실행
 let selectChartData = function(stockId){
+    chart = new google.visualization.CandlestickChart(document.getElementById('chart_div'));
     let type = $('.chartVariable').val()
     $.ajax({
         type : 'post',           // 타입 (get, post, put 등등)
@@ -33,6 +34,7 @@ let selectChartData = function(stockId){
             "type": type
         }),
         success : function(result) { // 결과 성공 콜백함수
+            $('#chart_div').empty();
             if(result.length != 0){
             if(type == 'T'){
                 stockChart(makeTodayChartData(result))
@@ -184,6 +186,7 @@ let stockChart = function(chartData){
 
     // 호가 DB 조회 + 호가 차트 함수 실행
     let selectAskData = function(stockId){
+        chart2 = new google.visualization.BarChart(document.getElementById('chart_div2'));
         $.ajax({
             type : 'post',           // 타입 (get, post, put 등등)
             url : '/influ/askgraph',           // 요청할 서버url
@@ -196,6 +199,7 @@ let stockChart = function(chartData){
                 "stockId" : stockId,
             }),
             success : function(result) { // 결과 성공 콜백함수
+                $('#chart_div2').empty();
                 if(result.askgraph.length != 0 || result.bidgraph.length != 0){
                 askChart(makeAskgraphData(result.askgraph, result.bidgraph))
                 } else {

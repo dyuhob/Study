@@ -66,8 +66,7 @@ public class UserServiceImpl implements UserService{
 	@Override
 	public int insertPlannerReview(PlannerReviewVO vo) {
 		// TODO Auto-generated method stub
-		System.out.println(vo);
-		if(vo.getPlanReviewId() == null) {
+		if(vo.getPlanReviewId().equals("")) {
 			return allPlannerMapper.insertPlannerReview(vo);
 		} else {
 			return allPlannerMapper.updatePlannerReview(vo);
@@ -81,7 +80,7 @@ public class UserServiceImpl implements UserService{
 		int result = 0;
 		for(MemberReviewVO mrvo : list) {
 			System.out.println(mrvo);
-			if(mrvo.getMrKey() == "") {
+			if(mrvo.getMrKey().equals("")) {
 				result += allPlannerMapper.insertMemberReview(mrvo);
 			} else {
 				result += allPlannerMapper.updateMemberReview(mrvo);

@@ -21,13 +21,13 @@ public class WebSecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 		http
 			.authorizeHttpRequests((requests) -> requests
-					.antMatchers("/").permitAll()
-				//.antMatchers("/", "/common", "/css/**", "/font/**", "/img/**", "/js/**", "/video/**", "/influ/main").permitAll()
-				//.antMatchers("/user/**").hasAuthority("ROLE_USER")
-				//.antMatchers("/seller/**").hasAuthority("ROLE_SELLER")
-				//.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
-				//.antMatchers("/influ/**").hasAuthority("ROLE_USER")
-				//.antMatchers("/sns/**").hasAuthority("ROLE_USER")
+					//.antMatchers("/").permitAll()
+				.antMatchers("/", "/common", "/css/**", "/font/**", "/img/**", "/js/**", "/video/**", "/influ/main").permitAll()
+				.antMatchers("/user/**").hasAuthority("ROLE_USER")
+				.antMatchers("/seller/**").hasAuthority("ROLE_SELLER")
+				.antMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
+				.antMatchers("/influ/**").hasAuthority("ROLE_USER")
+				.antMatchers("/sns/**").hasAuthority("ROLE_USER")
 			)
 			.formLogin((form) -> form
 				.loginPage("/common/loginform")
