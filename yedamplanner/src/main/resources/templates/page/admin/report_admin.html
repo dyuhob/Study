@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/admin_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+
+			<div class="col-lg-8">
+				<div class="dashboard_common_table">
+					<h3>신고 관리</h3>
+					<div class="table-responsive-lg table_common_area">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>신고번호</th>
+									<th>신고사유</th>
+									<th>신고자</th>
+									<th>신고대상자</th>
+									<th>신고게시글</th>
+									<th>신고일시</th>
+									<th>처리 결과</th>
+									<th>처리 일시</th>
+									<th>처리</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="info : ${list}">
+									<td class="rpkey" th:text="${info.reportKey}"></td>	
+									<td th:text="${info.reportReason}"></td>
+									<td th:text="${info.reporterId}"></td>
+									<td class="reportedId" th:text="${info.reportedId}"></td>
+									<td class="reportPost" th:text="${info.reportPost}"></td>
+									<td th:text="${#dates.format(info.reportDate, 'yyyy-MM-dd / HH:mm')}"></td>
+									<td class="complete" th:text="${info.reportApprove}"></td>
+									<td th:text="${#dates.format(info.approveDate, 'yyyy-MM-dd / HH:mm')}"></td>
+									<td>
+										<div th:if="${info.reportApprove} == 'N'">
+										<button class="btn btn-primary btn-sm approve">승인</button>
+										<button class="btn btn-danger btn-sm reject">거부</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="pagination_area">
+					<ul class="pagination">
+						<li class="page-item"><a class="page-link" href="#"
+							aria-label="Previous"> <span aria-hidden="true">«</span> <span
+								class="sr-only">Previous</span>
+						</a></li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#"
+							aria-label="Next"> <span aria-hidden="true">»</span> <span
+								class="sr-only">Next</span>
+						</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+			<script th:src="@{/admin/js/reportlist_admin.js}"></script>
+		</th:block>
+	</div>
+
+</body>
+
+</html>

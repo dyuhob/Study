@@ -1,0 +1,92 @@
+<!DOCTYPE html> <!-- qna_post.html -->
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+<div>
+<th:block layout:fragment="content">
+
+    <!-- 게시글 상세 페이지 -->
+    <section id="tour_details_main" class="section_padding" style="padding-top: 200px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="tour_details_leftside_wrapper">
+                        <div class="tour_details_boxed">
+                        	<!-- QnA 제목 -->
+                        	<div class="flex_div">
+							    <h3 class="heading_theme" style="float:left;" th:text="${qna.communityBoardTitle}"></h3>
+							    <p style="float:right; margin-left: 10px;" th:text="'조회수 : ' + ${qna.communityBoardViews}"></p>
+							    <p style="float:right; margin-left: 10px;"  th:text="${#dates.format(qna.communityBoardDate, 'yy-MM-dd')}"></p>
+							</div>
+                            <!-- QnA 제목 끝 -->
+
+                            <!-- QnA 내용 -->
+                            <br><br><br>
+                            <div class="tour_details_boxed_inner">
+                                <p th:text="${qna.communityBoardContent}">
+                                </p>
+                            </div>
+                            <!-- QnA 내용 끝 -->
+                        </div>
+                        <div class="btn_zip">
+						  <button style="border: 1px solid black;" class="btn btn-light" onclick="location.href='/qna/main'">목록</button>
+						  <a  class="btn btn-success" th:href="@{/qna/answerWrite/{communityBoardNum}(communityBoardNum=${qna.communityBoardNum})}">답변하기</a>
+						  <a th:if="${qna.memberId == session.id}" th:href="@{'/qna/qnaQuestionDelete/' + ${qna.communityBoardNum}}" class="btn btn-danger">삭제</a>
+						  <a th:if="${qna.memberId == session.id}" th:href="@{/qna/qnaQuestionUpdate/{communityBoardNum}/{answerCommunityBoardNum}(communityBoardNum=${qna.communityBoardNum}, answerCommunityBoardNum=${qna.answerCommunityBoardNum})}" class="btn btn-primary">수정</a>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 게시글 상세 페이지 끝 -->
+
+	<!-- 답글 영역 -->
+	<section id="answer_main" class="section_padding" th:each="answer : ${answers}">
+	    <div class="container">
+	        <div class="row">
+	            <div class="col-lg-12">
+	                <div class="tour_details_leftside_wrapper">
+	                    <div class="tour_details_boxed">
+	                        <div>
+	                            <div class="answer_header">
+	                                <h5 class="heading_theme">
+	                                  <i style="color: green;" th:if="${answer.boardChoose} == 'Y'" class="fas fa-star"></i>
+	                                  <span th:text="${answer.memberId}"></span>
+	                                </h5>
+	                                <p style="float: right; margin-right: 10px;" class="text-muted" th:text="${#dates.format(answer.communityBoardDate, 'yy-MM-dd')}"></p>
+	                                <a th:if="${answer.boardChoose != 'Y'}" th:href="@{/qna/answerChoose/{communityBoardNum}(communityBoardNum=${answer.communityBoardNum})}">
+	                                  <button th:if="${answer.boardChoose} != 'Y'" style="float: right; margin-right: 10px;" class="btn btn-warning choose-answer-btn">채택하기</button>	                                  
+	                                </a>
+	                                <button th:if="${answer.boardChoose} == 'Y'" style="float: right; margin-right: 10px;" class="btn btn-success" disabled>채택됨</button>
+	                            </div>
+	                            <div class="answer_body">
+	                                <p th:text="${answer.communityBoardContent}"></p>
+	                            </div>
+	                            <hr>
+	                        </div>
+	                    </div>
+	                </div>
+	                <!-- 버튼 영역 시작 -->
+	                <div class="btn_zip">
+	                    <a th:if="${answer.memberId == session.id}" class="btn btn-danger" th:href="@{'/qna/qnaAnswerDelete/' + ${answer.communityBoardNum}(answerCommunityBoardNum=${answer.communityBoardNum})}">삭제</a>
+	                    <a th:if="${answer.memberId == session.id}" th:href="@{'/qna/qnaAnswerUpdate/' + ${answer.communityBoardNum}(answerCommunityBoardNum=${answer.communityBoardNum})}" class="btn btn-primary">수정</a>
+	                </div>
+	                <!-- 버튼 영역 끝 -->
+	            </div>
+	        </div>
+	    </div>
+	</section>
+	<!-- 답글 영역 끝 -->
+	
+</th:block>
+</div>
+</body>
+
+</html>

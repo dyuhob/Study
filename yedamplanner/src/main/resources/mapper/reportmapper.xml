@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.common.mapper.ReportMapper">
+  <insert id="insertReport" parameterType="ReportVO">
+  	insert into report(report_key, report_reason, report_date, reporter_id, reported_id, report_approve, report_post)
+  	values('rp' || lpad(report_key.nextval, 3, '0'), #{reportReason}, sysdate, #{reporterId}, #{reportedId}, 'N', #{reportPost})
+  </insert>
+  <select id="selectReport" parameterType="ReportVO">
+  	select * from report
+  	where reporter_id = #{reporterId}
+  	and report_post = #{reportPost}
+  </select>
+   <select id="getReportList" resultType="ReportVO">
+  	select * from report
+  </select>
+  <update id="approveReport" parameterType="ReportVO">
+  	update report
+  	set report_approve = 'A'
+  	where report_key = #{reportKey}
+  </update>
+  <update id="rejectReport" parameterType="ReportVO">
+  	update report
+  	set report_approve = 'R'
+  	where report_key = #{reportKey}
+  </update>
+  <select id="getReportedInfo" parameterType="MemberVO" resultType="ReportVO">
+  	select * 
+  	from	( select * from report
+			where reported_id = #{memberId}
+			order by report_date desc)
+	where rownum = 1
+  </select>
+  </mapper>

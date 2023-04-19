@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/seller_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+			<div class="col-lg-8">
+			<br>
+				<div class="dashboard_common_table">
+					<h3>상품 목록</h3>
+					<div class="table-responsive-lg table_common_area">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>상품명</th>
+									<th>수량</th>
+									<th>가격</th>
+									<th>시작일</th>
+									<th>종료일</th>
+									<th>판매상태</th>
+									<th>종료버튼</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="list : ${list}">
+									<td style="display: none;" th:text="${list.packageId}" />
+									<td style="display: none;" th:text="${list.planId}" />
+									<td style="display: none;" th:text="${list.sellerId}" />
+									<td th:text="${list.planName}" />
+									<td th:text="${list.packageNum}" />
+									<td th:text="${list.packagePrice}" />
+									<td th:text="${#dates.format(list.planStart, 'yyyy-MM-dd')}" />
+									<td th:text="${#dates.format(list.planEnd, 'yyyy-MM-dd')}" />
+									<td>판매중</td>
+									<td><button>종료</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div>
+					<button id="addBtn" class="btn btn_theme btn_md">상품등록</button>
+				</div>
+				<div class="pagination_area">
+					<ul class="pagination">
+						<li class="page-item"><a class="page-link" href="#"
+							aria-label="Previous"> <span aria-hidden="true">«</span> <span
+								class="sr-only">Previous</span>
+						</a></li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#"
+							aria-label="Next"> <span aria-hidden="true">»</span> <span
+								class="sr-only">Next</span>
+						</a></li>
+					</ul>
+				</div>
+			</div>
+
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+			<!-- Modal -->
+			<div class="modal fade" id="addModal" tabindex="-1" role="dialog"
+				aria-hidden="true">
+				<form th:action="@{productInsert}" method="POST">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h4 class="modal-title" id="myModalLabel">패키지 등록</h4>
+							</div>
+							<div class="modal-body">
+								<div class="form-group">
+									<label for="productId">상품명</label> <select class="form-control"
+										name="planId" id="planId" required aria-label="상품명 선택"
+										aria-required="true">
+										<option value="" selected>상품선택</option>
+										<option th:each="myPlan : ${myPlanList}"
+											th:value="${myPlan.planId}" th:text="${myPlan.planName}"></option>
+									</select>
+								</div>
+								<div class="form-group">
+									<label>수량</label> <input type="number" class="form-control"
+										name="packageNum">
+								</div>
+								<div class="form-group">
+									<label>가격</label> <input type="number" class="form-control"
+										name="packagePrice">
+								</div>
+								<div class="form-group" style="display: none;">
+									<label>판매자</label> <input type="text" class="form-control"
+										name="sellerId" id="sellerId" th:value="${session.id}">
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button id="modalAddBtn" type="submit" class="btn btn-primary">등록</button>
+								<button id="modalCloseBtn" type="button" data-dismiss="modal"
+									class="btn btn-outline-secondary">취소</button>
+							</div>
+						</div>
+						<!-- /.modal-content -->
+					</div>
+					<!-- /.modal-dialog -->
+				</form>
+			</div>
+			<!-- /.modal -->
+			<script th:src="@{/seller/js/seller.js}"></script>
+			<script>
+				document
+						.getElementById("modalCloseBtn")
+						.addEventListener(
+								"click",
+								function() {
+									// Clear the input fields
+									document
+											.querySelector("#addModal select[name='planId']").value = "";
+									document
+											.querySelector("#addModal input[name='packageNum']").value = "";
+									document
+											.querySelector("#addModal input[name='packagePrice']").value = "";
+
+									// Close the modal
+									var modal = document
+											.getElementById("addModal");
+									modal.style.display = "none";
+									modal.setAttribute("aria-hidden", "true");
+									modal.setAttribute("aria-modal", "false");
+								});
+			</script>
+		</th:block>
+	</div>
+
+</body>
+
+</html>

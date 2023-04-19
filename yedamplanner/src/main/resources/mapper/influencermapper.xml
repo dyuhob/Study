@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.influencer.mapper.InfluencerMapper">
+  <insert id="insertListing" parameterType="String">
+  insert into listing_apply(listing_no, apply_date, influencer_id, listing_approve)
+  values(listing.nextval, sysdate, #{id}, 'N')
+  </insert>
+  <select id="myListingInfo" resultType="ListingApplyVO">
+  select * from listing_apply where influencer_id = #{id}
+  order by apply_date desc
+  </select>
+  <select id="stockgraph" resultType="ExchangeVO" parameterType="String">
+  	select * from stock_exchange
+  	where stock_id = #{id}
+  	and settle_date is not null
+  	order by settle_date asc
+  </select>
+   <select id="threeStockgraph" resultType="ExchangeVO" parameterType="String">
+  	select settle_date + Mod((sysdate - settle_date), 3) as settle_date, exchange_price
+  	from stock_exchange
+  	where settle_date > sysdate - 30
+  	and stock_id = #{id}
+  	and settle_date is not null
+  	order by settle_date asc
+  </select>
+   <select id="todayStockgraph" resultType="ExchangeVO" parameterType="String">
+  	select settle_date as todaychart, exchange_price
+  	from stock_exchange
+  	where settle_date > sysdate - 1
+  	and stock_id = #{id}
+  	and settle_date is not null
+  	order by settle_date asc
+  </select>
+ 
+  <select id="bidgraph" resultType="ExchangeVO" parameterType="String">
+  	<![CDATA[
+  	select *
+	from	(select sum(exchange_amount) as exchange_amount, exchange_price
+         	from 	(select exchange_price, exchange_amount
+                		from stock_exchange
+                		where exchange_type = 'B'
+                		and settle_no is null
+                		and stock_id = #{stockId})
+         				group by exchange_price
+         	order by exchange_price desc)
+	where rownum < 5
+	]]>
+  </select>
+  <select id="askgraph" resultType="ExchangeVO" parameterType="String">
+  	<![CDATA[
+  	select *
+from    (select sum(exchange_amount) as exchange_amount, exchange_price
+         from (select exchange_price, exchange_amount
+                from stock_exchange
+                where exchange_type = 'S'
+                and settle_no is null
+                and stock_id = #{stockId})
+         group by exchange_price
+         order by exchange_price asc)
+where rownum < 5
+order by exchange_price desc
+]]>
+  </select>
+  <insert id="insertExchange" parameterType="ExchangeVO" statementType="CALLABLE">
+  	<if test='exchangeType=="S"'>
+  	call sellersettlement(#{exchangeAmount}, #{exchangePrice}, #{stockId}, #{memberId})
+  	</if>
+  	<if test='exchangeType=="B"'>
+  	call buyersettlement(#{exchangeAmount}, #{exchangePrice}, #{stockId}, #{memberId})
+  	</if>
+  </insert>
+  <select id="selectApplyInfo" resultType="influencerApplyVO">
+  	select * from influencer_apply
+  	where member_id = #{id}
+  	order by apply_date desc
+  </select>
+  <insert id="insertInfluencer" parameterType="String">
+  insert into influencer_apply
+  values((select nvl(max(apply_no),0)+1 from influencer_apply), sysdate, #{id}, 'N')
+  </insert>
+  <select id="getInfluencerList" resultType="MemberVO">
+  	select r.*, rownum rm from
+(select m.*, nvl((s.stock_quantity*s.market_value), 0) rank
+	from member m left outer join stock s
+	on m.member_id = s.stock_id
+	where member_grade = 'I'
+	order by rank desc) r
+    order by rm
+  </select>
+  <select id="ProgressListing" resultType="ListingApplyVO">
+   select * from listing_apply where listing_approve = 'P'
+  </select>
+  <select id="getListingInfo" resultType="ListingApplyVO">
+  	select * from listing_apply where listing_no = #{id}
+  </select>
+  <select id="getMyOfferingList" resultType="OfferingVO">
+  	select o.offering_no, o.listing_no, l.influencer_Id, l.listing_approve
+	from stock_offering o inner join listing_apply l
+	on o.listing_no = l.listing_no
+	where o.applicant_id = #{id}
+  </select>
+  <select id="sumOfferingInfo" resultType="OfferingVO">
+  	select count(*) as count, sum(offering_amount) as sum, sum(offering_point)/count(*) as avgpoint from stock_offering where listing_no = #{no}
+  </select>
+  <select id="getMyOfferingInfo" resultType="OfferingVO">
+  	select o.offering_no, o.listing_no, l.influencer_Id, l.listing_approve, l.listing_price, o.offering_point, o.offering_amount, o.applicant_id, o.buying_amount, o.buying_point
+	from stock_offering o inner join listing_apply l
+	on o.listing_no = l.listing_no
+  	where o.listing_no = #{listingNo} and o.applicant_id = #{applicantId}
+  </select>
+  <update id="insertOffering" parameterType="OfferingVO">
+  merge into stock_offering
+  	using dual
+  	on (applicant_id = #{applicantId} and listing_no = #{listingNo})
+  	when matched then
+  		update set
+  			offering_point = #{offeringPoint},
+  			offering_amount = #{offeringAmount}
+  	when not matched then
+  		insert (offering_no, offering_point, offering_amount, listing_no, applicant_id, apply_date) 
+  		values((select max(offering_no)+1 from stock_offering), #{offeringPoint}, #{offeringAmount}, #{listingNo}, #{applicantId}, sysdate)
+  </update>
+  <insert id="stockDivide" statementType="CALLABLE">
+  	call stock_divide()
+  </insert>
+  <select id="getConvertList" resultType="ConvertVO" parameterType="MemberVO">
+  	select * from point_convert
+  	where applicant_id = #{memberId}
+  </select>
+  <select id="insertConvert" parameterType="ConvertVO" resultType="int">
+  	insert into point_convert(convert_key, convert_point, applicant_id, apply_approve, apply_date)
+  	values(convert_key.nextval, #{convertPoint}, #{applicantId}, 'N', sysdate)
+  </select>
+  <select id="getMyStockInfo"  resultType="String" parameterType="HolderVO">
+    select stock_amount from stock_holder
+    where stock_id = #{stockId}
+    and member_id = #{memberId}
+  </select>
+  <select id="getMyStockList" resultType="HolderVO">
+  	select stock_id, stock_amount from stock_holder
+  	where member_id= #{memberId}
+  </select>
+  <select id="largeHolder" resultType="String" parameterType="HolderVO">
+  	select member_id from
+    (select member_id from stock_holder
+    where stock_id = #{stockId}
+    order by stock_amount desc)
+	where rownum = 1
+  </select>
+  <select id="getStockInfo" resultType="StockVO" parameterType="HolderVO">
+  	select * from stock
+  	where stock_id = #{stockId}
+  </select>
+  <select id="firstListingDate" resultType="Date" parameterType="HolderVO">
+  	select * from
+(select end_date from listing_apply
+where influencer_id = #{stockId}
+and listing_approve = 'Y'
+order by end_date asc)
+where rownum = 1
+  </select>
+  <select id="lastListingDate" resultType="Date" parameterType="HolderVO">
+  	select * from
+(select end_date from listing_apply
+where influencer_id = #{stockId}
+and listing_approve = 'Y'
+order by end_date desc)
+where rownum = 1
+  </select>
+  <update id="ListingUpdate" parameterType="OfferingVO">
+  	update listing_apply
+  	set applicant_amount = applicant_amount + 1,
+  	stock_amount = stock_amount + #{offeringAmount}
+  	where listing_no = #{listingNo}
+  </update>
+  <update id="ListingModify" parameterType="OfferingVO">
+  	update listing_apply
+  	set stock_amount = stock_amount + #{offeringAmount}
+  	where listing_no = #{listingNo}
+  </update>
+  <update id="modifyOffering" parameterType="OfferingVO">
+  	update stock_offering
+  	set offering_amount = #{offeringAmount},
+  	offering_point = #{offeringPoint}
+  	where listing_no = #{listingNo}
+  	and applicant_id = #{applicantId}
+  </update>
+  <select id="myExchangeInfo" parameterType="ExchangeVO" resultType="ExchangeVO">
+  	select exchange_no, exchange_price, exchange_amount, exchange_type, exchange_date, stock_id, settle_date from stock_exchange
+	where member_id = #{memberId}
+	and stock_id = #{stockId}
+	order by exchange_date desc
+  </select>
+  <delete id="cancelExchange" parameterType="ExchangeVO">
+   delete from stock_exchange
+   where exchange_no = #{exchangeNo}
+  </delete>
+  <update id="updateHolder" parameterType="HolderVO">
+  	update stock_holder
+  	set stock_amount = stock_amount + #{stockAmount}
+  	where stock_id = #{stockId}
+  	and member_id = #{memberId}
+  </update>
+  </mapper>

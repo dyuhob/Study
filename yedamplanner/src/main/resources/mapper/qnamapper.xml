@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.qna.mapper.QnaMapper">
+
+	<!-- 게시글 리스트 -->
+	<select id="qnaList" resultType="QnaVO">
+		SELECT *
+		  FROM community_board
+		 WHERE community_boardDelete = 'N'
+		 ORDER BY community_boardNum DESC
+	</select>
+
+	<!-- 게시글 조회 -->
+	<select id="qnaPostLooking" resultType="QnaVO">
+		SELECT *
+		  FROM community_board
+		 WHERE community_boardNum = #{communityBoardNum}
+	</select>
+	
+	<!-- 작성글 등록 -->
+	<insert id="qnaQuestionAdd" parameterType="QnaVO">
+		     INSERT INTO 
+	community_board (
+					community_boardNum,
+					community_boardDate,
+					community_boardContent,
+					community_boardTitle,
+					community_boardCategory,
+					member_id,
+					community_boardDelete,
+					board_choose,
+					community_boardViews
+					)
+			 VALUES (
+			 		'QP' || LPAD(community_boardNum_seq.NEXTVAL, 3, '0'),
+			 		sysdate,
+			 		#{communityBoardContent},
+			 		#{communityBoardTitle},
+			 		'QnA',
+			 		#{memberId},
+			 		default,
+			 		default,
+			 		default
+			 		)
+	</insert>
+	
+	<!-- 작성글 삭제 -->
+	<update id="qnaQuestionDelete" parameterType="String">
+		UPDATE community_board
+		   SET community_boardDelete = 'Y'
+		 WHERE community_boardNum = #{noticeBoardNum}
+	</update>
+	
+	<!-- 작성글 수정 -->
+	<update id="qnaQuestionUpdate" parameterType="QnaVO">
+		UPDATE community_board
+		   SET community_boardContent = #{communityBoardContent}
+		 WHERE community_boardNum = #{communityBoardNum}
+	</update>
+	
+	<!-- 조회수 기능 -->
+	<update id="qnaPostView" parameterType="QnaVO">
+		UPDATE community_board
+  		   SET community_boardViews = community_boardViews + 1
+  		 WHERE community_boardNum = #{communityBoardNum}
+	</update>
+
+	<!-- 답글 작성 -->	
+	<insert id="qnaAnswerAdd" parameterType="QnaVO">
+    INSERT INTO
+        	community_board (
+            community_boardNum,
+            community_boardDate,
+            community_boardContent, 
+            community_boardTitle,
+            community_boardCategory,
+            member_id,
+            community_boardDelete,
+            board_choose,
+            community_boardViews,
+            answer_communityBoardNum
+        	)
+    VALUES (
+           'QB' || LPAD(community_boardNum_seq.NEXTVAL, 3, '0'),
+           sysdate,
+           #{communityBoardContent},
+           'Answer',
+           'Answer',
+           #{memberId},
+           default,
+           default,
+           default,
+           #{answerCommunityBoardNum}
+	       )
+	</insert>
+
+	<!-- 답글 리스트 -->
+	<select id="qnaAnswerPostList" parameterType="String" resultType="QnaVO">
+	    SELECT * 
+	      FROM community_board 
+	     WHERE answer_communityBoardNum = #{communityBoardNum}
+	       AND community_boardDelete = 'N'
+	     ORDER BY board_choose DESC, community_boardDate ASC
+	</select>
+	
+	<!-- 답변자가 본인 답변을 수정 -->
+	<update id="qnaAnswerUpdate" parameterType="QnaVO">
+		UPDATE community_board
+		   SET community_boardContent = #{communityBoardContent}
+		 WHERE community_boardNum = #{communityBoardNum}
+	</update>
+	
+	<!-- 해당 답변을 채택 -->
+	<update id="answerChoose" parameterType="String">
+	    UPDATE community_board
+	       SET board_choose = 'Y'
+	     WHERE community_boardNum = #{communityBoardNum}
+	</update>
+	
+	<!-- 해당 답변을 채택후 게시글로 리다이렉트 -->
+	<select id="answerRedirect" parameterType="String" resultType="String">
+	    SELECT answer_communityBoardNum
+	      FROM community_board
+	     WHERE community_boardNum = #{answerBoardNum}
+	</select>
+	
+	<!-- 답글 삭제 -->
+	<update id="qnaAnswerDelete" parameterType="String">
+		UPDATE community_board
+		   SET community_boardDelete = 'Y'
+		 WHERE community_boardNum = #{communityBoardNum}
+	</update>
+	
+	<!-- 답글 수정후 조회창으로 리다이렉트 -->
+	<select id="answerUpdateRedirect" parameterType="String" resultType="String">
+	    SELECT answer_communityBoardNum
+	      FROM community_board
+	     WHERE community_boardNum = #{answerCommunityBoardNum}
+	</select>
+	
+	<!-- 채택하기 유효성 검사 -->
+	<select id="answerChooseCheck" parameterType="string" resultType="QnaVO">
+		SELECT *
+	    FROM community_board
+	    WHERE community_boardNum = #{answerCommunityBoardNum}
+	</select>
+	
+</mapper>

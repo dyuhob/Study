@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/planner_layout2">
+
+<div>
+	<th:block layout:fragment="planner_content">
+		<!-- Tour Booking Submission Areas -->
+		<section id="tour_booking_submission" class="section_padding">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-8">
+						<div class="tou_booking_form_Wrapper">
+							<div class="booking_tour_form">
+								<h3 class="heading_theme">패키지 정보</h3>
+								<div class="tour_booking_form_box">
+									<form action="/planner/vo" id="profile_form_area" method="POST">
+										<div>
+											<input type="hidden" th:value="${vo.planId}" name="memberId">
+										</div>
+										<div class="row">
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="f-name">패키지명</label> <input type="text"
+														class="form-control" id="f-name" th:value="${vo.planName}"
+														disabled="true" name="planName">
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="l-name">가격</label> <input type="number"
+														class="form-control" id="l-name"
+														th:value="${vo.packagePrice}" disabled="true"
+														name="packagePrice">
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="mail-address">출발일</label> <input type="text"
+														class="form-control" id="planStart"
+														th:value="${#dates.format(vo.planStart, 'yyyy-MM-dd')}"
+														disabled="true" name="planStart">
+												</div>
+											</div>
+											<div class="col-lg-6">
+												<div class="form-group">
+													<label for="u-name">종료일</label> <input type="text"
+														class="form-control" id="u-name"
+														th:value="${#dates.format(vo.planEnd, 'yyyy-MM-dd')}"
+														disabled="true" name="planEnd">
+												</div>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-4">
+						<div class="tour_details_right_sidebar_wrapper">
+							<div class="tour_detail_right_sidebar">
+								<form action="/planner/vo" id="profile_form_area" method="POST">
+									<div class="tour_details_right_boxed">
+										<div class="tour_details_right_box_heading">
+											<h3>결제 정보</h3>
+										</div>
+										<div class="edit_date_form">
+											<div class="form-group">
+												<label for="sellNum">인원</label> <input id="sellNum"
+													type="number" value="1" min="1" class="form-control"
+													oninput="updateAmount()">
+											</div>
+										</div>
+										<div class="tour_package_details_bar_list">
+											<div class="tour_details_right_box_heading">
+												<h3>결제 금액</h3>
+											</div>
+											<div class="tour_booking_amount_area">
+												<ul>
+													<li th:text="${vo.packagePrice}"></li>
+												</ul>
+											</div>
+										</div>
+										<br>
+										<div>
+											<button id="payBtn" type="button"
+												class="btn btn-primary btn-sm payBtn"
+												onclick="payWithKakaoPay()">결제하기</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<script>
+		    function updateAmount() {
+		        var sellNum = document.getElementById('sellNum').value;
+		    	var pricePerPerson = [[${vo.packagePrice}]];
+		        var totalAmount = sellNum * pricePerPerson;
+		        document.querySelector('.tour_booking_amount_area li').innerText = totalAmount;
+		    }
+		</script>
+		<script type="text/javascript"
+			src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
+		<script src="/planner/js/payment.js"></script>
+	</th:block>
+</div>
+
+</html>

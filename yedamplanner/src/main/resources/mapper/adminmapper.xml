@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.admin.mapper.AdminMapper">
+  <select id="selectListingInfo" resultType="ListingApplyVO">
+  	select b.* 
+  	from ( select rownum rn, a.* 
+  			from 
+  			(select * from listing_apply
+  			order by apply_date desc) a
+  			where
+  	 <![CDATA[
+    		rownum <= (#{pageNum} * #{amount})
+   		  ) b
+   where rn > (#{pageNum} - 1) * #{amount}
+    ]]>   
+  </select>
+  <update id="approveListingApply" parameterType="int">
+  	update listing_apply 
+  	set listing_approve = 'P',
+  	start_date = sysdate,
+  	end_date = sysdate+14
+  	where listing_no = #{no}
+  </update>
+   <update id="rejectListingApply" parameterType="int">
+  	update listing_apply 
+  	set listing_approve = 'R' where listing_no = #{no}
+  </update>
+  <select id="selectInfluencerInfo" resultType="InfluencerApplyVO">
+  	select * from influencer_apply
+  	order by apply_date desc
+  </select>
+  <update id="approveInfluencer" parameterType="int">
+  	update influencer_apply
+  	set apply_approve = 'Y' where apply_no = #{no}
+  </update>
+   <update id="rejectInfluencer" parameterType="int">
+  	update influencer_apply 
+  	set apply_approve = 'R' where apply_no = #{no}
+  </update>
+  <insert id="completeListing" parameterType="int" statementType="CALLABLE">
+  	call complete_offering(#{no})
+  </insert>
+  <update id="endListing" parameterType="int">
+  	update listing_apply
+  	set listing_approve = 'E' where listing_no = #{no}
+  </update>
+   <select id="allConvertList" resultType="ConvertVO">
+  	select * from point_convert
+	order by apply_date desc
+  </select>
+  <select id="totalAllListing" resultType="int">
+  	select count(*) from listing_apply
+  </select>
+  </mapper>
+  

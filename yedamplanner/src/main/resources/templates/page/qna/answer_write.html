@@ -1,0 +1,63 @@
+<!DOCTYPE html> <!-- answer_write.html -->
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+<head>
+</head>
+
+<body>
+<div>
+<th:block layout:fragment="content">
+
+    <!-- QnA 답글 작성 폼 -->
+    <section id="contact_main_arae" class="section_padding">
+        <div class="container">
+            <div class="contact_main_form_area">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="section_heading_center">
+                            <h2>답글 작성</h2>
+                        </div> 
+                        <div class="contact_form">
+                            <form th:action="@{/qna/qnaAnswerAdd}" method="post" id="contact_form_content">
+                                <div class="row">
+								<input type="hidden" name="answerCommunityBoardNum" th:value="${answerCommunityBoardNum}" />
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                        	<h2 th:text="${qna.memberId}"></h2>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control bg_input" rows="5" placeholder="내용" name="communityBoardContent"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+									    <label for="fileInput">
+									  		<img th:src="@{/assets/img/img.png}" style="width:30px; display: none;" alt="아이콘">
+										</label>
+										<input style="display: none;" id="fileInput" type="file" name="file" accept="image/*">
+										    <a class="btn btn-danger" style="float: right; margin-left: 10px; width: 75px; height: 42px;" th:href="@{/qna/main}">취소</a>
+                                            <button style="float: right;" type="submit" class="btn btn_theme btn_md">등록</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- QnA 답글 작성 폼 끝 -->
+
+    <div class="go-top">
+        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    </th:block>
+    </div>
+</body>
+</html>

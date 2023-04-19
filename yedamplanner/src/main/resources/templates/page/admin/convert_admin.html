@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/admin_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+
+			<div class="col-lg-8">
+				<div class="dashboard_common_table">
+					<h3>환전 신청 관리</h3>
+					<div class="table-responsive-lg table_common_area">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>신청번호</th>
+									<th>신청자</th>
+									<th>신청일시</th>
+									<th>신청 포인트</th>
+									<th>처리 결과</th>
+									<th>처리</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="info : ${list}">	
+									<td th:text="${info.convertKey}"></td>
+									<td th:text="${info.applicantId}"></td>
+									<td th:text="${#dates.format(info.applyDate, 'yyyy-mm-dd / HH:mm')}"></td>
+									<td th:Text="${info.convertPoint}"></td>
+									<td class="complete" th:text="${info.applyApprove}"></td>
+									<td>
+										<div th:if="${info.applyApprove} == 'N'">
+										<button class="btn btn-primary btn-sm approve">승인</button>
+										<button class="btn btn-danger btn-sm reject">거부</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+			<script th:src="@{/admin/js/convert_admin.js}"></script>
+		</th:block>
+	</div>
+
+</body>
+
+</html>

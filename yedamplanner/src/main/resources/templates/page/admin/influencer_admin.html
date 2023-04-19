@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/admin_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+
+			<div class="col-lg-8">
+				<div class="dashboard_common_table" >
+					<h3>인플루언서 신청 관리</h3>
+					<div class="table-responsive-lg table_common_area" style="overflow:auto; height:800px;">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>신청번호</th>
+									<th>신청자</th>
+									<th>신청일시</th>
+									<th>처리 결과</th>
+									<th>처리</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="info : ${list}">	
+									<td th:text="${info.applyNo}"></td>
+									<td th:text="${info.memberId}"></td>
+									<td th:text="${#dates.format(info.applyDate, 'yyyy-MM-dd / HH:mm')}"></td>
+									<td class="waiting" th:if="${info.applyApprove} == 'N'" >대기</td>
+									<td class="cancele" th:if="${info.applyApprove} == 'R'" >거부</td>
+									<td class="complete" th:if="${info.applyApprove} == 'Y'" >승인</td>
+									<td>
+										<div th:if="${info.applyApprove} == 'N'">
+										<button class="btn btn-primary btn-sm approve">승인</button>
+										<button class="btn btn-danger btn-sm reject">거부</button>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+			<script th:src="@{/admin/js/influencer_admin.js}"></script>
+		</th:block>
+	</div>
+
+</body>
+
+</html>

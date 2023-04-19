@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- Title -->
+<title>About - Andtourtravel</title>
+<!-- Bootstrap css -->
+<link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}" />
+<!-- animate css -->
+<link rel="stylesheet" th:href="@{/assets/css/animate.min.css}" />
+<!-- Fontawesome css -->
+<link rel="stylesheet" th:href="@{/assets/css/fontawesome.all.min.css}" />
+<link rel="stylesheet"
+	th:href="@{https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.2/font/bootstrap-icons.css}">
+<!-- owl.carousel css -->
+<link rel="stylesheet" th:href="@{/assets/css/owl.carousel.min.css}" />
+<!-- Rangeslider css -->
+<link rel="stylesheet" th:href="@{/assets/css/nouislider.css}" />
+<!-- owl.theme.default css -->
+<link rel="stylesheet"
+	th:href="@{/assets/css/owl.theme.default.min.css}" />
+<!-- navber css -->
+<link rel="stylesheet" th:href="@{/assets/css/navber.css}" />
+<!-- meanmenu css -->
+<link rel="stylesheet" th:href="@{/assets/css/meanmenu.css}" />
+<!-- Style css -->
+<link rel="stylesheet" th:href="@{/assets/css/style.css}" />
+<!-- Responsive css -->
+<link rel="stylesheet" th:href="@{/assets/css/responsive.css}" />
+<!-- Favicon -->
+<link rel="icon" type="image/png" th:href="@{/assets/img/favicon.png}">
+</head>
+
+
+<body>
+	<!-- header fragment 사용 -->
+	<th:block th:replace="fragments/header :: headerFragment"></th:block>
+	<!-- 일반회원 사이드바 -->
+	<section id="dashboard_main_arae" class="section_padding" style="padding-top: 200px;">
+		<div class="container">
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="dashboard_sidebar">
+						<div class="dashboard_sidebar_user">
+							<img th:src="${vo.memberPhoto}">
+							<h3 th:text="${vo.memberName}">이름</h3>
+							<p th:if="${vo.memberGrade} == 'I'">등급 : 인플루언서</p>
+							<p th:if="${vo.memberGrade} == 'N'">등급 : 일반회원</p>
+						</div>
+						<div class="dashboard_menu_area">
+							<ul>
+							    <li><a th:href="@{/user/profile}"><i class="fas fa-user-circle"></i>나의 정보 조회</a></li>
+								<li><a th:href="@{/user/myplanner}"> <i class="fas fa-map"></i>나의 플래너 이력</a></li>
+								<li><a th:href="@{/user/pointhistoryform}"><i class="fas fa-history"></i>나의 포인트 이력</a></li>
+								<li><a th:href="@{/influ/influencerapplyform}"><i class="fas fa-tachometer-alt"></i>인플루언서 신청</a></li>
+								<div class="influencer_menu" th:if="${vo.memberGrade} == 'I'">
+									<li><a th:href="@{/influ/listingapplyform}"><i class="fas fa-paper-plane"></i>상장 신청 </a></li>
+									<li><a th:href="@{/influ/pointconvertform}"><i class="fas fa-wallet"></i>환전 신청</a></li>
+								</div>
+								<br>
+								<li><a href="#!" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fas fa-sign-out-alt"></i>탈퇴하기</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!-- content fragment 사용 -->
+				<th:block layout:fragment="content"></th:block>
+			</div>
+		</div>
+	
+	</section>
+
+	<!-- footer fragment 사용 -->
+	<th:block th:replace="fragments/footer :: footerFragment"></th:block>
+	<!-- Logout Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body logout_modal_content">
+                    <div class="btn_modal_closed">
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="fas fa-times"></i></button>
+                    </div>
+                    <h3>
+                    탈퇴하시겠습니까?
+                    </h3>
+                    <div class="logout_approve_button">
+                        <button data-bs-dismiss="modal" class="btn btn_theme btn_md">확인</button>
+                        <button data-bs-dismiss="modal" class="btn btn_border btn_md">뒤로가기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+
+	<script th:src="@{/assets/js/jquery.min.js}"></script>
+	<!-- Bootstrap js -->
+	<script th:src="@{/assets/js/bootstrap.bundle.js}"></script>
+	<!-- Meanu js -->
+	<script th:src="@{/assets/js/jquery.meanmenu.js}"></script>
+	<!-- owl carousel js -->
+	<script th:src="@{/assets/js/owl.carousel.min.js}"></script>
+	<!-- Waypoint js -->
+	<script th:src="@{/assets/js/waypoints.min.js}"></script>
+	<!-- Counter Up js -->
+	<script th:src="@{/assets/js/jquery.counterup.min.js}"></script>
+	<!-- wow.js -->
+	<script th:src="@{/assets/js/wow.min.js}"></script>
+	<!-- Custom js -->
+	<script th:src="@{/assets/js/custom.js}"></script>
+	<script th:src="@{/assets/js/add-form.js}"></script>
+	 <script>
+		// counter
+		jQuery(document).ready(function ($) {
+			$('.counter').counterUp({
+				delay: 10,
+				time: 1000
+			});
+		});
+	</script>
+ 
+</body>
+
+</html>

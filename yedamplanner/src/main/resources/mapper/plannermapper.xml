@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.yedam.app.planner.mapper.PlannerMapper">
+
+	<!--플래너 조회 -->
+	<select id="getPlannerInfo" parameterType="String" resultType="PlannerVO">
+		select *
+		from planner
+		where plan_id = #{planId}
+	</select>
+	<!-- 플래너 도시 조회 -->
+	<select id="getPlannerCity" parameterType="String" resultType="cityVO">
+		select city.*
+		  from city 
+		  join planner
+		    on city.city = planner.city
+		where plan_id = '${planId}'
+	</select>
+	<!-- 여행지 리스트 -->
+	<select id="getPlace" parameterType="String" resultType="PlaceVO">
+		select *
+		from place
+		where city = (select city from planner where plan_id = '${planId}')
+	</select>
+	<!-- 인기 여행지 조회 -->
+	<select id="getPopularPlace" parameterType="String" resultType="PlaceVO">
+		<![CDATA[select rownum, p.*
+					from(select place.*
+							from place join planner
+							on place.city = planner.city
+							where plan_id = '${planId}'
+							order by place_like desc) p
+					where rownum <= 5]]>
+	</select>
+
+	<!-- 추천 여행지 조회 -->
+	<select id="getRecommendPlace" parameterType="String" resultType="PlaceVO">
+			<![CDATA[select *
+						from(select *
+						        from (select *
+						                from(select rownum rn, p.*
+						                        from(select place.*
+														from place join planner
+														on place.city = planner.city
+														where plan_id = '${planId}'
+						                                order by place_like) p)
+						               			where rn > 15)
+						        		order by dbms_random.value)
+								where rownum <= 8]]>
+	</select>
+
+	<!-- 여행지 인기 플래너 -->
+	<select id="getPopularPlanner" parameterType="String" resultType="PlannerVO">
+		<![CDATA[select rownum rn, p.* 
+			        from(select *
+				            from planner
+				            where city = (select city from planner where plan_id = '${planId}')
+				            and plan_fin = 'F'
+				            order by plan_like desc) p
+			        where rownum <= 5]]>
+	</select>
+	
+	<!-- 여행지 단건 조회 -->
+	<select id="getPlaceInfo" parameterType="String" resultType="PlaceVO">
+		select *
+		from place
+		where place_id = '${placeId}'
+	</select>
+	
+	<!-- 리뷰 리스트 조회 -->
+	<select id="getReviewList" parameterType="String" resultType="ReviewVO">
+		select *
+		from travel_review
+		where place_id = '${placeId}'
+		order by review_date desc
+	</select>
+	<!-- 리뷰 사진 조회 -->
+	<select id="getReviewImgList" parameterType="String" resultType="ReviewImgVO">
+		select *
+		from photo
+		where photo_route = '${placeId}'
+		and member_id = '${userId}'
+	
+	</select>
+	<!-- 리뷰 갯수 -->
+	<select id="reviewCount" parameterType="String" resultType="int">
+		select count(review_id)
+		from travel_review
+		where place_id = '${placeId}'
+	</select>
+	<!-- 별점 평균 -->
+	<select id="getStarAvg" parameterType="String" resultType="double">
+		select NVL(round(avg(review_star), 1), 0) avg
+		from travel_review
+		where place_id = '${placeId}'
+	</select>
+	<!-- 별점 백분율 -->
+	<select id="getStarPercent" parameterType="String" resultType="ReviewVO">
+		select review_star,
+        		round(star_count / sum(star_count) over(), 2)*100 as star_percent
+		from (select review_star, count(review_star) as star_count 
+    			from travel_review
+    			where place_id = '${placeId}'
+    			group by review_star
+    			order by review_star)
+	
+	</select>
+	<!-- 찜 플레이스 리스트 -->
+	<select id="getLikePlaceList" parameterType="String" resultType="PlaceLikeVO">
+		select *
+		from plan_place
+		where plan_id = '${planId}'
+	</select>
+	<!-- 찜 플레이스 유무 -->
+	<select id="getLikePlace" parameterType="String" resultType="PlaceLikeVO">
+		select *
+		from plan_place
+		where placelike_id = '${placeLikeId}'
+	</select>
+	<!-- 찜 플레이스 추가 -->
+	<insert id="insertLikePlace" parameterType="PlaceLikeVO">
+		insert into plan_place
+		values ('${placeLikeId}', '${planId}', '${placeId}')
+	</insert>
+	<!-- 찜 플레이스 삭제 -->
+	<delete id="deleteLikePlace" parameterType="PlaceLikeVO">
+		delete from plan_place
+		where place_Id = '${placeId}'
+		  and plan_id = '${planId}'
+	</delete>
+	
+	<!-- 개인 체크리스트 호출 -->
+	<select id="getCheckList" parameterType="String" resultType="CheckVO">
+		select *
+		from plan_checkList
+		where plan_id = '${planId}'
+		and writer_id = '${memberId}'
+		and check_cate = 'P'
+		order by check_writetime
+	</select>
+	<!-- 전체 체크리스트 호출 -->
+	<select id="getAllCheckList" parameterType="String" resultType="CheckVO">
+		select *
+        from plan_checkList
+        where plan_id = '${planId}'
+        and check_cate = 'A'
+        order by writer_id
+	</select>
+	<!-- 체크리스트 추가 -->
+	<insert id="addCheckList" parameterType="CheckVO">
+		insert into plan_checkList (check_id, writer_id, check_content,  plan_id, check_Cate)
+		values (concat('${checkId}', check_list.nextval), '${writerId}', '${checkContent}', '${planId}', '${checkCate}')
+	</insert>
+	<!-- 체크리스트 갯수 계산 -->
+	<select id="countCheckList" parameterType="CheckVO" resultType="int">
+		select count(*)
+		 from plan_checkList
+		where plan_id = '${planId}'
+		  and check_cate = '${checkCate}'
+		  and writer_id = '${writerId}'
+	</select>
+	<!-- checked 수정 -->
+	<update id="updateChecked" parameterType="CheckVO">
+		update plan_checkList 
+		   set check_or_not = '${checkOrNot}'
+		 where check_id = '${checkId}'
+	</update>		
+	<!-- 체크리스트 단건 조회 -->
+	<select id="selectCheck" parameterType="String" resultType="CheckVO">
+		select *
+		from plan_checkList
+		where check_id = '${checkId}'
+	</select>
+	<!-- 개인 체크리스트 수정 -->
+	<update id="updateCheckContent" parameterType="String">
+		update plan_checkList 
+		   set check_content = '${checkContent}'
+		 where check_id = '${checkId}'
+	</update>
+	<!-- 전체 체크리스트 수정 -->
+	<update id="updateAllCheckContent" parameterType="String">
+		update plan_checkList 
+		   set check_content = #{checkContent},
+		   	   writer_id = #{userId}
+		 where check_id = #{checkId}
+	</update>
+	<!-- 체크리스트 삭제 -->
+	<delete id="deleteCheckList" parameterType = "String">
+		delete from plan_checkList
+		where check_id = #{checkId}
+	</delete>
+	<!-- 장부 리스트 호출 -->
+	<select id = "getBudgetList" parameterType="String" resultType="BudgetVO">
+		select *
+		from plan_budget
+		where plan_id = #{planId}
+		and budget_date = #{budgetDate}
+	</select>
+	<!-- 장부 수정 -->
+	<update id = "updateBudget" parameterType="String">
+		update plan_budget
+		set ${column} = #{content}
+		where budget_id = #{budgetId}
+	</update>
+	<!-- 장부 추가 -->
+	<insert id = "insertBudget" parameterType="BudgetVO">
+		insert into plan_budget
+		values (#{budgetList}, #{budgetPrice}, #{budgetContent}, #{planId}, #{budgetMemo}, #{budgetDate}, concat('${budgetId}', check_list.nextval))
+	</insert>
+	<!-- 장부 삭제 -->
+	<delete id = "deleteBudget" parameterType="String">
+		delete from plan_budget
+		where budget_id = #{budgetId}
+	</delete>
+	<!-- 장부 일별 합계 -->
+	<select id = "dayBySum" parameterType="String" resultType="BudgetVO">
+		select NVL(sum(budget_price), 0) as sum
+		from plan_budget
+		where budget_date = #{budgetDate}
+		and plan_id = #{planId}
+	</select>
+</mapper>

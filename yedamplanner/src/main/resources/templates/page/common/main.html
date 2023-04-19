@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+<body>
+	<div>
+		<th:block layout:fragment="content">
+
+			<!-- Banner Area -->
+			<section id="home_one_banner">
+				<div class="container">
+					<div class="row align-items-center">
+						<div class="col-lg-12">
+							<div class="banner_one_text">
+								<h1>함께 여행하세요</h1>
+								<h3>계획을 짜고 여행을 가고 다른사람과 공유하세요</h3>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!--Promotional Tours Area -->
+			<section id="promotional_tours" class="section_padding_top">
+				<div class="container">
+					<!-- Section Heading -->
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+							<div class="section_heading_center">
+								<h2>인기 플래너</h2>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12">
+							<div class="promotional_tour_slider owl-theme owl-carousel dot_style">
+								<div class="theme_common_box_two img_hover" th:each='plan:${planList}'>
+									<div class="theme_two_box_img">
+										<a th:href="'/planner/main/'+${plan.planId}">
+										<img th:src="${plan.cityImg}" alt="img">
+										</a>
+										<p>
+											<i class="fas fa-map-marker-alt"></i>
+											<span th:text="${plan.cityName}"></span>
+										</p>
+									</div>
+									<div class="theme_two_box_content">
+										<h4>
+											<a th:href="'/planner/main/'+${plan.planId}" th:text="${plan.planName}">플래너 이름</a>
+										</h4>
+										<p>
+											<span class="review_rating" th:text="${plan.hostId}">호스트</span> <span
+												class="review_count" th:text="${plan.planMax}">최대 참여자 수</span>
+										</p>
+										<h3>
+											<span th:text="${#dates.format(plan.planStart, 'yy/MM/dd')}+'~'+${#dates.format(plan.planEnd, 'yy/MM/dd')}">여행 일자</span>
+										</h3>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<!-- News Area -->
+			<section id="home_news" class="section_padding_top">
+				<div class="container">
+					<!-- Section Heading -->
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+							<div class="section_heading_center">
+								<h2>인기 인플루언서</h2>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<div class="home_news_item noticeSet" th:each='infl:${influList}'>
+							<div class="home_news_img">
+								<a th:href="'/sns/main/'+${infl.followId}">
+								<img th:src="${infl.memberPhoto}" alt="img"></a>
+							</div>
+							<div class="home_news_content">
+								<h3 th:text="${infl.followId}">인플루언서 이름</h3>
+								<p>
+								<span th:text="'♡'+${infl.count}">♡팔로워</span>
+								<i class="fas fa-circle"></i><span th:href="'/sns/main/'+${infl.followId}">인플루언서 더보기</span>
+								</p>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</section>
+			<!-- imagination Area -->
+			<section id="go_beyond_area" class="section_padding_top">
+				<div class="container">
+					<div class="row align-items-center">
+						<div class="col-lg-3 col-md-6 col-sm-6 col-12">
+							<div class="heading_left_area">
+								<h2>
+									<span style="position: absolute; width: 15%; top: 30px;">어디로
+										여행갈까?</span>
+								</h2>
+								<h5 style="position: absolute; top: 90px;">여행지를 추천드려요</h5>
+								<div class="leftBox editRecommend" style="top: 120px">🚎
+									인기 여행지</div>
+								<div class="leftBox userRecommend" style="top: 180px">🌸
+									봄에 어울리는 여행지</div>
+							</div>
+						</div>
+							<div class="col-lg-3 col-md-6 col-sm-6 col-12 mainPlace" th:each='city : ${cityList}' th:style="'background-image: url('+ ${city.cityImg}+');'">
+								<div style="position: absolute; bottom: 10px; left: 40%; font-size: 30px"><span th:text="${city.cityName}" style="color:white;"></span></div>
+							</div>
+					</div>
+				</div>
+			</section>
+		</th:block>
+	</div>
+</body>
+</html>

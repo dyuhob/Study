@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.file.mapper.FileMapper">
+  <insert id="insertFile" parameterType="com.yedam.app.file.service.FileVO">
+  	INSERT INTO 
+  		photo(
+  		photo_id,
+  		photo_route,
+  		photo_location,
+  		member_id)
+	VALUES(
+		#{photoId},
+		#{photoRoute},
+		#{photoLocation},
+		#{memberId})
+  </insert>
+  
+  <select id="getFile" parameterType="String" resultType="com.yedam.app.file.service.FileVO">
+  	SELECT * 
+  	FROM photo
+  	WHERE photo_location = #{photoLocation}
+  </select>
+  
+  </mapper>
+  

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:fragment="planner_sidebarFragment">
+	<div class="side_map_wrapper">
+		<input type="text" id="map_search" class="form-control"
+			placeholder="검색어를 입력하세요">
+		<button type="button" th:if="${#lists.contains(planMemberList.![memberId], session.id)}" id="chat_btn" class="btn btn_theme chat_icon_box" onclick="showChatBox();">
+			<img class="chat_icon" src="/assets/img/icon/chat_icon.png"
+				alt="chat_box">
+		</button>
+		<div id="map"></div>
+	</div>
+	<!-- 대화창 -->
+		<div class="chat_box" style="display:none;">
+			<div class="center">
+				<div class="chat">
+					<div class="contact bar" style="height: 20%;">
+						<div class="pic stark"></div>
+						<div class="name" th:text="${userId}"></div>
+					</div>
+					<div class="messages" id="chat" style="height: 70%;">
+						<div class="time" style="display:none;"></div>
+					</div>
+					<div class="input" style="height: 10%;">
+						<input class="sendMessage" placeholder="보내실 메시지를 입력하세요" type="text" onkeypress="pressEnter(event);"/>
+						<button class="btn chatbtn" onclick="sendContent()" id="sendBtn">보내기</button>
+					</div>
+				</div>
+			</div>
+		</div>		
+		<!-- 대화창 -->
+</div>
+</html>

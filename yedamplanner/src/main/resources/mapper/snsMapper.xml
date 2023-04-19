@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.sns.mapper.SnsMapper">
+	<select id="getPostListMember" parameterType="String" resultType="SnsVO">
+  		SELECT * 
+  		  FROM	sns_post
+  		 WHERE sns_postDelete = 'N' 
+  		   AND member_id = #{memberId}
+  		 ORDER BY sns_postDate DESC
+  	</select>
+  	
+	<insert id="insertPost" parameterType="SnsVO">
+	INSERT INTO 
+		sns_post(
+		sns_postNum,
+		sns_postDate,
+		sns_postContent,
+		member_id,
+		sns_postDelete)
+	VALUES(
+		SNS_POSTNUM_SEQ.nextval,
+		SYSDATE,
+		#{snsPostContent},
+		#{memberId},
+		default)
+	</insert>
+	
+	<select id="getPost" parameterType="Integer" resultType="SnsVO">
+		SELECT sns_postNum, 
+		       sns_postContent, 
+		       member_id, 
+		       					( select member_Photo 
+		       					    from member 
+		       					   where member.member_id = sns_post.member_id ) 
+		   	   member_Photo
+		  FROM sns_post
+		 WHERE sns_postNum = #{sns_postNum}
+	</select>
+	
+	<update id="updatePost" parameterType="SnsVO">
+		UPDATE sns_post
+		   SET sns_postContent = #{snsPostContent}
+		 WHERE sns_postNum = #{snsPostNum}
+	</update>
+	
+	<update id="deletePost" parameterType="SnsVO">
+		UPDATE sns_post
+		   SET sns_postDelete = 'Y'
+		 WHERE sns_postNum = #{snsPostNum}
+	</update>
+	
+	<select id="memberCheck" parameterType="Integer" resultType="String">
+		SELECT member_id
+		  FROM sns_post
+		 WHERE sns_postNum = #{postId}
+	</select>
+	
+	<select id="getCommentList" parameterType="Integer" resultType="SnsVO">
+		SELECT sns_commentNum, sns_commentContent, sns_commentDate, member_id, sns_commentDelete
+		  FROM sns_comment
+		 WHERE sns_postNum = #{snsPostNum}
+		   AND sns_commentDelete = 'N'
+		 ORDER BY sns_commentDate ASC
+	</select>
+	
+	<update id="deleteComment" parameterType="SnsVO">
+		UPDATE sns_comment
+		   SET sns_commentDelete = 'Y'
+		 WHERE sns_commentNum = #{snsCommentNum}
+	</update>
+	
+	<insert id="insertComment" parameterType="SnsVO">
+	INSERT INTO 
+			sns_comment
+	VALUES(
+			sns_comment_seq.nextval, 
+			#{snsCommentContent},
+			sysdate,
+			#{memberId},
+			#{snsPostNum},
+			default)
+	</insert>
+	
+	<insert id="followInsert" parameterType="SnsVO">
+		INSERT INTO
+				follow (
+				follow_id,
+				follower_id)
+		VALUES(
+				#{followId},
+				#{followerId})
+	</insert>
+	
+	<select id="followCheck" parameterType="SnsVO" resultType="Integer">
+		SELECT COUNT(*) AS fList
+		  FROM follow
+		 WHERE follow_id = #{followId}
+		   AND follower_id = #{followerId}
+	</select>
+	
+	<delete id="followDelete" parameterType="SnsVO">
+		DELETE FROM follow
+		 WHERE follow_id = #{followId}
+		   AND follower_id = #{followerId}
+	</delete>
+	
+	<select id="likeCheck" parameterType="SnsVO" resultType="Integer">
+		SELECT *
+		  FROM sns_like
+		 WHERE member_id = #{memberId}
+		   AND sns_postNum = #{snsPostNum}
+	</select>
+	
+	<insert id="likeInsert" parameterType="SnsVO">
+		INSERT INTO
+		  	   sns_like (
+		  	   like_id,
+		  	   like_check,
+		  	   member_id,
+
+		  	   sns_postNum)
+		VALUES (
+			   'SL' || LPAD(like_id_seq.NEXTVAL, 3, '0'),
+			   'L',
+			   #{memberId},
+
+			   #{snsPostNum})
+	</insert>
+
+	<select id="likeCountTotal" resultType="Integer" parameterType="Integer">
+		SELECT COUNT(*)
+			AS likeTotal
+		  FROM sns_like
+		 WHERE sns_postNum = #{snsPostNum}
+		   AND like_check = 'L'
+	</select>
+	
+	<select id="getPostListFollowing" parameterType="String" resultType="SnsVO">
+	    SELECT sns_post.* 
+	      FROM sns_post
+	      JOIN follow ON sns_post.member_id = follow.follow_id
+	     WHERE sns_post.sns_postDelete = 'N' 
+	       AND follow.follower_id = #{memberId}
+	     ORDER BY sns_post.sns_postDate DESC
+	</select>
+	
+	<select id="getPostListCombined" parameterType="String" resultType="SnsVO">
+	    SELECT DISTINCT sns_post.* 
+	      FROM sns_post
+	      LEFT JOIN follow ON sns_post.member_id = follow.follow_id
+	     WHERE sns_post.sns_postDelete = 'N'
+	       AND (follow.follower_id = #{memberId} OR sns_post.member_id = #{memberId})
+	     ORDER BY sns_post.sns_postDate DESC
+	</select>
+
+	
+	<!-- <select id="">
+  		SELECT MAX()+1 FROM
+  		sns_post
+  	</select> -->
+</mapper>

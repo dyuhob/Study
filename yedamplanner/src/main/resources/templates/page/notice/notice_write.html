@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+<head>
+</head>
+
+<body>
+<div>
+<th:block layout:fragment="content">
+    <!-- preloader Area -->
+    <div class="preloader">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="lds-spinner">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- search -->
+    <div class="search-overlay">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="search-overlay-layer"></div>
+                <div class="search-overlay-layer"></div>
+                <div class="search-overlay-layer"></div>
+                <div class="search-overlay-close">
+                    <span class="search-overlay-close-line"></span>
+                    <span class="search-overlay-close-line"></span>
+                </div>
+                <div class="search-overlay-form">
+                    <form>
+                        <input type="text" class="input-search" placeholder="Search here...">
+                        <button type="button"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 공지 작성 폼 -->
+    <section id="contact_main_arae" class="section_padding" style="padding-top: 200px;">
+        <div class="container">
+            <div class="contact_main_form_area">
+                <div class="row">
+                    <div class="col-lg-8 offset-lg-2">
+                        <div class="section_heading_center">
+                            <h2>공지 작성</h2>
+                        </div> 
+                        <div class="contact_form">
+                            <form th:action="@{${change == 'edit' ? '/notice/noticeUpdate' : '/notice/noticeAdd'}}" method="post" id="contact_form_content">
+                                <div class="row">
+                                <input type="hidden" name="change" th:value="${change}" />
+                                <input type="hidden" name="noticeBoardNum" th:value="${change == 'edit' ? notice.noticeBoardNum : ''}" />
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control bg_input" placeholder="제목" name="noticeBoardTitle" th:value="${change == 'edit' ? notice.noticeBoardTitle : ''}">
+                                        </div>	
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+                                            <textarea class="form-control bg_input" rows="5" placeholder="내용" name="noticeBoardContent" th:utext="${change == 'edit' ? notice.noticeBoardContent : ''}"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group">
+									    <label for="fileInput">
+									  		<img th:src="@{/assets/img/img.png}" style="width:30px; display: none;" alt="아이콘">
+										</label>
+										<input style="display: none;" id="fileInput" type="file" name="file" accept="image/*">
+										    <a class="btn btn-danger" style="float: right; margin-left: 10px; width: 75px; height: 42px;" th:href="@{/notice/main}">취소</a>
+                                            <button style="float: right;" type="submit" class="btn btn_theme btn_md" th:text="${change == 'edit' ? '수정' : '등록'}"></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 공지 작성 폼 끝 -->
+
+    <div class="go-top">
+        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Map Modal -->
+    <div class="modal fade" id="staticBackdrop" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered  modal-lg">
+            <div class="modal-content">
+                <div class="modal-body map_modal_content">
+                    <div class="btn_modal_closed">
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="fas fa-times"></i></button>
+                    </div>
+                    <div class="map_area">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3677.6962663570607!2d89.56355961427838!3d22.813715829827952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39ff901efac79b59%3A0x5be01a1bc0dc7eba!2sAnd+IT!5e0!3m2!1sen!2sbd!4v1557901943656!5m2!1sen!2sbd"></iframe>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </th:block>
+    </div>
+</body>
+</html>

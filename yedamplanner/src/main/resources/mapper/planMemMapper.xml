@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.planner.mapper.PlanMemMapper">
+
+	<insert id="planJoinReq" parameterType="PlanMemVO">
+		INSERT INTO
+		plan_applicant (applicant_no, plan_id, member_id)
+		VALUES
+		(seq_applicant.nextval, #{planId}, #{memberId})
+	</insert>
+
+	<select id="getPlanJoinList" parameterType="String"
+		resultType="PlanMemVO">
+		SELECT * FROM plan_applicant
+		WHERE plan_id = #{planId}
+	</select>
+
+	<insert id="insertMember" parameterType="PlanMemVO">
+		<!-- SELECT 쿼리를 실행하여 자동으로 문자열을 생성하고, package_id에 사용 -->
+		<selectKey keyProperty="pmemKey"
+			resultType="java.lang.String" order="BEFORE">
+			SELECT generate_pmem_key('PM')
+			FROM DUAL
+		</selectKey>
+		<!-- 생성된 문자열을 ackage_id에 사용하여 INSERT 쿼리 실행 -->
+		INSERT INTO plan_member (
+		pmem_key,
+		plan_id,
+		member_id
+		) VALUES (
+		#{pmemKey},
+		#{planId},
+		#{memberId}
+		)
+	</insert>
+
+	<insert id="insertHost" parameterType="PlanMemVO">
+		<!-- SELECT 쿼리를 실행하여 자동으로 문자열을 생성하고, package_id에 사용 -->
+		<selectKey keyProperty="pmemKey"
+			resultType="java.lang.String" order="BEFORE">
+			SELECT generate_pmem_key('PM')
+			FROM DUAL
+		</selectKey>
+		<!-- 생성된 문자열을 ackage_id에 사용하여 INSERT 쿼리 실행 -->
+		INSERT INTO plan_member (
+		pmem_key,
+		plan_id,
+		member_id,
+		plan_grade
+		) VALUES
+		(
+		#{pmemKey},
+		#{planId},
+		#{memberId},
+		'H'
+		)
+	</insert>
+
+	<delete id="deleteReq" parameterType="PlanMemVO">
+		delete from plan_applicant
+		where applicant_no = #{applicantNo}
+	</delete>
+
+	<select id="getPlanMemberList" parameterType="String"
+		resultType="PlanMemVO">
+		SELECT * FROM plan_member
+		WHERE plan_id = #{planId} AND
+		plan_grade != 'Q'
+		ORDER BY plan_grade
+	</select>
+
+	<update id="deleteMember" parameterType="PlanMemVO">
+		update plan_member
+		set
+		plan_grade = 'Q'
+		where pmem_key = #{pmemKey}
+	</update>
+
+	<update id="endPlanner" parameterType="PlanMemVO">
+		update plan_member
+		set
+		plan_close = 'O'
+		where pmem_key = #{pmemKey}
+	</update>
+
+	<update id="changeHost" parameterType="PlanMemVO">
+		update plan_member
+		set
+		plan_grade = 'H'
+		where pmem_key = #{pmemKey}
+	</update>
+
+	<update id="dropHost" parameterType="PlanMemVO">
+		update plan_member
+		set
+		plan_grade = 'N'
+		where member_id = #{memberId}
+	</update>
+	
+	<update id="changePlanHost" parameterType="PlannerVO">
+		update planner
+		set
+		host_id = #{memberId}
+		where plan_id = #{planId}
+	</update>
+	
+	<update id="quitPlanner" parameterType="PlanMemVO">
+		update plan_member
+		set
+		plan_grade = 'Q'
+		where plan_id = #{planId} and member_id = #{memberId}
+	</update>
+	
+	<update id="endAllPlanner" parameterType="PlannerVO">
+		update planner
+		set
+		plan_fin = 'F'
+		where plan_id = #{planId}
+	</update>
+
+</mapper>

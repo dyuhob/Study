@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/planner_layout">
+
+<div>
+	<th:block layout:fragment="planner_content">
+		<!-- Dashboard Area -->
+		<section id="dashboard_main_arae" class="section_padding">
+			<div class="container">
+				<div class="row">
+					<div class="col-lg-4">
+						<div class="dashboard_sidebar">
+							<div class="dashboard_menu_area">
+								<ul>
+									<li><a
+										th:href="@{/planner/main/{planId}/planMember(planId=${planId})}"><i
+											class="bi bi-people-fill"></i>회원목록</a></li>
+									<li th:if="${session.id == plannerInfo.hostId}"><a
+										th:href="@{/planner/main/{planId}/planReq(planId=${planId})}"><i
+											class="bi bi-person-plus-fill"></i>가입신청목록</a></li>
+									<li th:if="${session.id == plannerInfo.hostId && plannerInfo.planFin != 'F'}"><a href="notification.html"><i
+											class="bi bi-stop-btn"></i>플래너 종료</a></li>
+									<li><a href="#!" data-bs-toggle="modal"
+										data-bs-target="#exampleModal"> <i
+											class="fas fa-sign-out-alt"></i>플래너 탈퇴
+									</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-8">
+						<div class="dashboard_common_table">
+							<h3>맴버 목록</h3>
+							<div class="table-responsive-lg table_common_area">
+								<table class="table">
+									<thead>
+										<tr>
+											<th>등급</th>
+											<th>ID</th>
+											<th>종결여부</th>
+											<th>관리</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="list : ${planMemberList}">
+											<td style="display: none;" th:text="${list.pmemKey}" />
+											<td th:text="${list.planGrade}" />
+											<td th:text="${list.memberId}" />
+											<td th:text="${list.planClose}" />
+											<td><button th:if="${session.id != list.memberId}"
+													id="sinBtn" type="submit"
+													class="btn btn-primary btn-sm sinBtn">신고</button>
+												<button
+													th:if="${session.id == plannerInfo.hostId && session.id != list.memberId}"
+													id="outBtn" type="submit"
+													class="btn btn-danger btn-sm outBtn">강퇴</button>
+												<button
+													th:if="${session.id == list.memberId && list.planClose == 'X'}"
+													id="endBtn" type="submit"
+													class="btn btn-success btn-sm endBtn">종결</button>
+												<button
+													th:if="${session.id == plannerInfo.hostId && session.id != list.memberId}"
+													id="changeBtn" type="submit"
+													class="btn btn-warning btn-sm changeBtn">호스트 이양</button></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- Logout Modal -->
+		<div class="modal fade" id="exampleModal" tabindex="-1"
+			aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-body logout_modal_content">
+						<div class="btn_modal_closed"></div>
+						<h3>플래너를 탈퇴하시겠습니까?</h3>
+						<div class="logout_approve_button">
+							<button data-bs-dismiss="modal" id="outPlan"
+								class="btn btn_theme btn_md outPlan">탈퇴하기</button>
+							<button data-bs-dismiss="modal" class="btn btn_border btn_md">취소하기</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</body>
+	</th:block>
+</div>
+</html>

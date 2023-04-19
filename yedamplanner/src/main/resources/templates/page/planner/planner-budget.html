@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/planner_layout">
+<div>
+
+	<th:block layout:fragment="planner_content">
+		<!-- Tour Search Areas -->
+		<section id="explore_area" class="planner_padding">
+			<div class="container-fluid">
+				<!-- Section Heading -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+						<div class="section_heading_center"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="row_left">
+						<th:block
+							th:replace="fragments/planner_sidebar :: planner_sidebarFragment"></th:block>
+					</div>
+					<div class="row_right">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="cruise_search_result_wrapper">
+									<div class="cruise_search_item"
+										style="background-image: url('assets/img/finalproject-img/dageu_lightfes.jpg'); background-size: cover; background-repeat: no-repeat; background-position: center center;">
+										<div class="cruise_item_inner_content">
+											<div class="cruise_content_top_wrapper">
+												<div class="cruise_content_top_left">
+													<ul>
+														<li>출발일~도착일<i class="fas fa-circle"></i></li>
+														<li>나라</li>
+													</ul>
+													<h4>여행지</h4>
+													<p></p>
+													<h5>
+														<i class="fas fa-map-marker-alt"></i>주소
+													</h5>
+												</div>
+												<div class="cruise_content_top_right">
+													<h4>날씨</h4>
+													<h5>온도</h5>
+												</div>
+											</div>
+											<div class="cruise_content_middel_wrapper">
+												<div class="cruise_content_middel_left">
+													<h5>별점 별점그림</h5>
+													<h6>리뷰 개수</h6>
+												</div>
+												<div class="cruise_content_middel_right">
+													<h5>환율</h5>
+												</div>
+											</div>
+											<div class="cruise_content_bottom_wrapper">
+												<div class="cruise_content_bottom_left">
+													<h5>카테고리</h5>
+												</div>
+												<div class="cruise_content_bottom_right">
+													<a href="tour-details.html" class="btn btn_theme btn_md">찜하기</a>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="travel_date">3/17 3/18 3/19</div>
+								<hr>
+								<div class="budget_planner">
+									<div class="dashboard_common_table">
+										<h4>예산 장부</h4>
+										<div class="table-responsive-lg table_common_area">
+											<table class="table budget_table">
+												<thead>
+													<tr>
+														<th rowspan="2">항목</th>
+														<th colspan="2">비용</th>
+														<!--<th>비용</th>-->
+														<th rowspan="2">세부사항</th>
+
+														<th rowspan="2">메모</th>
+													</tr>
+													<tr>
+														<!--<th>항목</th>-->
+														<th>원화</th>
+														<th>환율</th>
+														<!--<th>세부사항</th>-->
+														<!--<th>버튼</th>-->
+														<!--<th>메모</th>-->
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>숙소</td>
+														<td>100,000</td>
+														<td>100,000</td>
+														<td>호텔 인터불고</td>
+														<td>주소: 대구광역시 수성구 팔현길 212 (만촌동 300번지)</td>
+													</tr>
+													<tr>
+														<td>점심</td>
+														<td>5,000</td>
+														<td>5,000</td>
+														<td>고삐식당</td>
+														<td>점심 1안</td>
+													</tr>
+													<tr>
+														<td>저녁</td>
+														<td>10,000</td>
+														<td>10,000</td>
+														<td>미란다키친</td>
+														<td>저녁으로 먹을꺼</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<td>총 액</td>
+														<td></td>
+														<td></td>
+														<td></td>
+														<td>115,000</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="budget_planner">
+									<div class="dashboard_common_table">
+										<h4>합계</h4>
+										<div class="table-responsive-lg table_common_area">
+											<table class="table budget_table">
+												<thead>
+													<tr>
+														<th>일 자</th>
+														<th>합 계</th>
+													</tr>
+												</thead>
+												<tbody>
+													<tr>
+														<td>3/17</td>
+														<td>115,000</td>
+													</tr>
+													<tr>
+														<td>3/18</td>
+														<td>115,000</td>
+													</tr>
+													<tr>
+														<td>3/18</td>
+														<td>115,000</td>
+													</tr>
+												</tbody>
+												<tfoot>
+													<tr>
+														<td>총 액</td>
+														<td>115,000</td>
+													</tr>
+												</tfoot>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+		</section>
+	</th:block>
+</div>

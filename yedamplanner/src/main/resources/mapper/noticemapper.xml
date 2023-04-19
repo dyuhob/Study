@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.notice.mapper.NoticeMapper">
+	<select id="noticeList" resultType="NoticeVO">
+		SELECT *
+		  FROM notice
+		 WHERE notice_boardDelete='N'
+		 ORDER BY notice_boardNum DESC
+	</select>
+	
+	<select id="noticeBoardView" resultType="NoticeVO">
+		SELECT *
+		  FROM notice
+		 WHERE notice_boardNum = #{noticeBoardNum}
+	</select>
+	
+	<insert id="noticeInsert" parameterType="NoticeVO">
+		INSERT INTO 
+		notice (
+			   notice_boardNum,
+			   notice_boardDate,
+			   notice_boardTitle,
+			   notice_boardContent,
+			   notice_boardDelete,
+			   member_id
+			   )
+		VALUES (
+			   'NP' || LPAD(notice_boardNum_seq.NEXTVAL, 3, '0'),
+			   sysdate,
+			   #{noticeBoardTitle},
+			   #{noticeBoardContent},
+			   'N',
+			   #{memberId}
+			   )
+	</insert>
+
+	<update id="noticeUpdate" parameterType="NoticeVO">
+		UPDATE notice
+		   SET notice_boardTitle = #{noticeBoardTitle},
+		   	   notice_boardContent = #{noticeBoardContent}
+		 WHERE notice_boardNum = #{noticeBoardNum}
+	</update>
+
+	<update id="noticeViews" parameterType="NoticeVO">
+		UPDATE notice
+  		   SET notice_boardViews = notice_boardViews + 1
+  		 WHERE notice_boardNum = #{noticeBoardNum}
+	</update>
+	
+	<update id="noticeDelete" parameterType="String">
+		UPDATE notice
+		   SET notice_boardDelete = 'Y'
+		 WHERE notice_boardNum = #{noticeBoardNum}
+	</update>
+	
+</mapper>

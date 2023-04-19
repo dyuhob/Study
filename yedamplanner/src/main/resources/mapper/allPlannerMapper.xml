@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.planner.mapper.AllPlannerMapper">
+	<select id="selectPlannerList" resultType="PlannerVO">
+		SELECT * 
+		  FROM planner
+		 where deldata = '1' 
+		   and plan_class = 'N' 
+		   and plan_fin = 'X' 
+		 order by plan_date desc
+	</select>
+
+	<insert id="insertPlannerInfo" parameterType="PlannerVO">
+		<!-- SELECT 쿼리를 실행하여 자동으로 문자열을 생성하고, plan_id에 사용 -->
+		<selectKey keyProperty="planId"
+			resultType="java.lang.String" order="BEFORE">
+			SELECT generate_plan_id('PL') FROM
+			DUAL
+		</selectKey>
+		<!-- 생성된 문자열을 plan_id에 사용하여 INSERT 쿼리 실행 -->
+		insert into planner (
+		plan_id, plan_name, plan_start, plan_end,
+		plan_max, plan_tag, plan_class,
+		host_id, city
+		) values (
+		#{planId},
+		#{planName}, #{planStart}, #{planEnd}, #{planMax}, #{planTag},
+		#{planClass}, #{hostId}, #{city}
+		)
+	</insert>
+
+	<select id="selectPmemList" resultType="PmemVO">
+		SELECT * FROM plan_member
+		where plan_id = #{planId}
+	</select>
+
+	<!-- 판매자가 운영하고 있는 플래너 목록 조회 -->
+	<select id="selectMyPlannerList" resultType="PlannerVO">
+		SELECT plan_id,
+		plan_name, plan_max FROM planner where deldata = '1'
+		and plan_fin = 'X'
+		and
+		host_id
+		= #{host_id} order by
+		plan_id desc
+	</select>
+
+	<select id="selectPlanPackageList" resultType="PlannerVO">
+		SELECT * FROM planner
+		where deldata = '1' and plan_class = 'P' and plan_fin = 'X' order by
+		plan_date desc
+	</select>
+	
+	<!-- 후기 조회용 쿼리 -->
+	<!-- 내가 참여한 플래너 목록 -->
+	<select id="selectJoinPlannerList" resultType="PlannerVO">
+		select m.*, p.* 
+		from plan_member m inner join planner p
+		on m.plan_id = p.plan_id
+		where m.member_id = #{memberId}
+		and p.deldata = '1'
+		order by p.plan_id desc
+	</select>
+	<!-- 멤버ID, 플래너ID로 플래너 후기 조회 -->
+	<select id="selectPlannerReview" resultType="PlannerReviewVO">
+		select * from plan_review
+		where plan_id = #{planId}
+		and rater = #{memberId}
+	</select>
+	<select id="selectMyMemberReviewList" resultType="MemberReviewVO">
+		<![CDATA[
+		select pm.*, mr.*
+		from plan_member pm left outer join member_review mr
+		on pm.member_id = mr.mr_subject
+		and pm.plan_id = mr.mr_plan_id
+		where pm.plan_id = #{planId}
+        and pm.member_id <> #{memberId}
+        ]]>
+	</select>
+	<insert id="insertPlannerReview" parameterType="PlannerReviewVO">
+		insert into plan_review
+		values((select nvl(max(plan_review_id),0)+1 from plan_review), #{content}, #{prStar}, #{rater}, #{planId})
+	</insert>
+	<update id="updatePlannerReview" parameterType="PlannerReviewVO">
+		update plan_review
+		set content = #{content}, pr_star = #{prStar}
+		where plan_review_id = #{planReviewId}
+	</update>
+	<insert id="insertMemberReview" parameterType="MemberReviewVO">
+		insert into member_review
+		values((SELECT ('mr' || lpad(nvl((substr(max(mr_key),3, 5)+1), 0), 3,'000')) FROM member_review),
+		#{mrContent}, #{mrLike}, #{mrPlanId}, #{mrRater}, #{mrSubject})
+	</insert>
+	<update id="updateMemberReview" parameterType="MemberReviewVO">
+		update member_review
+		set mr_content = #{mrContent}, mr_like = #{mrLike}
+		where mr_key = #{mrKey}
+	</update>
+	<select id="payPackage" resultType="ProductVO">
+		select  pp.package_id,
+				pp.seller_id, 
+				pp.package_price, 
+				pp.package_num,
+				
+				p.plan_id,
+				p.plan_start, 
+				p.plan_end, 
+				p.plan_name
+				
+		  from  plan_package pp 
+		 inner join	planner p
+		    on ( pp.plan_id = p.plan_id and p.plan_id = #{planId} )
+	</select>
+	<select id="getPlannerReviewList" resultType="PlannerReviewVO">
+		select r.*, p.plan_name
+		from plan_review r inner join planner p
+		on r.plan_id = p.plan_id
+		order by plan_review_id desc
+	</select>
+	<select id="getPlanReviewInfo" resultType="PlannerReviewVO">
+		select r.*, p.plan_name
+		from plan_review r inner join planner p
+		on r.plan_id = p.plan_id and plan_review_id = #{planReviewId}
+	</select>
+	<select id="getCityList" resultType="CityVO">
+		select *
+		from city
+		order by city_name desc
+	</select>
+
+</mapper>

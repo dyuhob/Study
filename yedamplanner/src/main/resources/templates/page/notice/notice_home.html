@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+<head>
+</head>
+
+<body>
+<div>
+<th:block layout:fragment="content">
+    <!-- preloader Area -->
+    <div class="preloader">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="lds-spinner">
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- search -->
+    <div class="search-overlay">
+        <div class="d-table">
+            <div class="d-table-cell">
+                <div class="search-overlay-layer"></div>
+                <div class="search-overlay-layer"></div>
+                <div class="search-overlay-layer"></div>
+                <div class="search-overlay-close">
+                    <span class="search-overlay-close-line"></span>
+                    <span class="search-overlay-close-line"></span>
+                </div>
+                <div class="search-overlay-form">
+                    <form>
+                        <input type="text" class="input-search" placeholder="Search here...">
+                        <button type="button"><i class="fas fa-search"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 공지사항 게시판 -->
+    <section id="dashboard_main_arae" class="section_padding" style="padding-top: 200px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="dashboard_common_table">
+                        <h3>공지사항</h3>
+                        <div class="table-responsive-lg table_common_area">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>글 번호</th>
+                                        <th>제목</th>
+                                        <th>아이디</th>
+                                        <th>등록일자</th>
+                                        <th>조회수</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="notice : ${noticeList}">
+                                    <td th:text="${notice.noticeBoardNum}">글 번호</td>
+                                    <td><a th:href="@{/notice/noticeView/{noticeBoardNum}(noticeBoardNum=${notice.noticeBoardNum})}" th:text="${notice.noticeBoardTitle}">제목</a></td>
+                                    <td th:text="${notice.memberId}">아이디</td>
+                                    <td th:text="${#dates.format(notice.noticeBoardDate, 'yy-MM-dd')}">등록일자</td>
+                                    <td th:text="${notice.noticeBoardViews}">조회수</td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div style="text-align: right;">
+                            	<button class="btn btn-dark" onclick="location.href='/notice/noticeWrite'">글 쓰기</button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 페이징 -->
+                    <div class="pagination_area">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">«</span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                            </li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">»</span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- 페이징끝 -->
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 공지사항 게시판 끝 -->
+
+
+    <div class="go-top">
+        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i>
+    </div>
+
+    <!-- Logout Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-body logout_modal_content">
+                    <div class="btn_modal_closed">
+                        <button type="button" data-bs-dismiss="modal" aria-label="Close"><i
+                                class="fas fa-times"></i></button>
+                    </div>
+                    <h3>
+                        Are you sure? <br>
+                        you want to log out.
+                    </h3>
+                    <div class="logout_approve_button">
+                        <button data-bs-dismiss="modal" class="btn btn_theme btn_md">Yes Confirm</button>
+                        <button data-bs-dismiss="modal" class="btn btn_border btn_md">No Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</div>
+</body>
+
+</html>

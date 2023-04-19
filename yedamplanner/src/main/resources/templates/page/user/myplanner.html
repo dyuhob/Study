@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/user_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+		
+        <div class="col-lg-8" padding="400px" style="padding-top: 50px;">
+            <div class="dashboard_common_table" >
+                <div class="notification_top_heading">
+                    <h3>나의 플래너 이력(후기 작성)</h3>
+                </div>
+                <div class="notification_wrapper" th:each="info : ${list}">
+                    <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" th:id="'heading' + ${info.planId}">
+                                <button class="accordion-button active" type="button" data-bs-toggle="collapse"
+                                    th:data-bs-target="'#collapse' + ${info.planId}" aria-expanded="true" th:aria-controls="${info.planId}" th:text="${info.planName}">
+                                </button>
+                            </h2>
+                            <div th:id="'collapse' + ${info.planId}" class="accordion-collapse collapse"
+                                th:aria-labelledby="'heading' + ${info.planId}" data-bs-parent="#accordionExample">
+                                <div class="accordion-body" th:each="prmap : ${info.prvo}">
+                                    <!-- 플래너 리뷰 -->
+                                    <h3>플래너 후기</h3>
+                                    <div  th:data-planId="${prmap.planId}">
+                                        <input type="hidden" class="planReviewId" th:value="${prmap.planReviewId}">
+                                        <textarea class="form-control bg_input" rows="6" th:text="${prmap.content}"></textarea>
+                                        평점<input type="number" min="0" max="5" class="prStar" th:value="${prmap.prStar}">
+                                        <br>
+                                        <br>
+                                        <button class="btn btn-primary btn-sm plannerInsert" th:if="${info.planFin} == 'X'">등록/수정</button>
+                                    </div>
+                                    <!-- 멤버 리뷰 -->
+                                    <br>
+                                    <h3> 멤버 후기 </h3>
+                                    <br>
+                                    <div th:each="mrvo : ${info.mrList}" class="memberReviewDiv">
+                                       <div th:each="mrmap : ${mrvo}" th:data-planId="${prmap.planId}" class="mrPlanId">
+                                        <input type="hidden" class="mrKey" th:value="${mrmap.mrKey}">
+                                            <h4 th:text="${mrmap.memberId}" class="mrSubject" ></h4>
+                                            <p>한줄평</p>
+                                            <textarea th:if="${mrmap.mrContent == null}" text="등록된 리뷰가 없습니다" class="form-control bg_input mrContent" rows="2"></textarea>
+                                            <textarea th:if="${mrmap.mrContent != null}" th:text="${mrmap.mrContent}" class="form-control bg_input mrContent" rows="2"></textarea>
+                                            <br>
+                                            평점<input type="number" th:value="${mrmap.mrLike}" min="0" max="5" class="mrLike">
+                                            <br>
+                                       </div>
+                                       <br>
+                                    </div>
+                                    <br>
+                                    <button class="btn btn-primary btn-sm memberInsert" th:if="${info.planFin} == 'X'">등록/수정</button>
+                                    <br>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    <div class="go-top">
+        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i>
+    </div>
+    <script th:src="@{/user/js/myplanner.js}"></script>
+	</th:block>
+	</div>
+    
+</body>
+
+</html>

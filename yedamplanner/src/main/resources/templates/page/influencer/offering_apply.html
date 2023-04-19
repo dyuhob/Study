@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+
+<body>
+   
+   <div>
+		<th:block layout:fragment="content">
+           
+    <!-- Contact Area -->
+    <section id="contact_main_arae" class="section_padding">
+        <div class="container">
+            <div class="contact_main_form_area">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="cat_form">
+                            <form id="cta_form_wrappper"></form>
+                            <div class="form-group">
+                                <label>공모 리스트 </label>
+                                <div class="input-group">
+                                <select class="form-control" name="offerNo" required id="listingNo">
+                                   <option value="" disabled selected>공모 리스트</option>
+                                     <option th:each="list : ${offerList}"
+                                      th:value="${list.listingNo}" th:text="${list.influencerId} + '(진행중)'" th:if="${list.listingApprove} == 'P'"></option>
+                                      <option th:each="list : ${offerList}"
+                                      th:value="${list.listingNo}" th:text="${list.influencerId} + '(마감됨)'" th:if="${list.listingApprove} == 'E'"></option>
+                                </select>
+                                <button class="btn btn_theme btn_md move" type="button">이동</button>
+                                </div>
+                             </div>	
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 offset-lg-2">
+                       <div class="section_heading_center">
+                            <h2 th:if="${listingInfo.listingApprove} == 'P'">공모 신청 내역</h2>
+                            <h2 th:if="${listingInfo.listingApprove} == 'E'">공모 신청 결과</h2>
+                            <br>
+                            <h4 th:text="'공모 마감일 : ' + ${#dates.format(listingInfo.endDate, 'yy-MM-dd')}"></h4>
+                        </div>
+                        <div class="contact_form">
+                            <form action="/influ/offerapply" id="contact_form_content" method="POST">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            공모 주식명
+                                            <input type="text" class="form-control bg_input" th:value="${listingInfo.influencerId}" disabled>
+                                            <input type="hidden" class="form-control bg_input" th:value="${listingInfo.listingNo}" name="listingNo">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            신청자 ID
+                                            <input type="text" class="form-control bg_input" th:value="${memberInfo.memberId}" disabled>
+                                            <input type="hidden" class="form-control bg_input" th:value="${memberInfo.memberId}" name="applicantId">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            보유 포인트
+                                            <input type="text" class="form-control bg_input myPoint" th:value="${memberInfo.memberPoint}" disabled >
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            주식 공모가
+                                            <input type="text" class="form-control bg_input listingPrice" th:value="${listingInfo.listingPrice}" disabled>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            신청 수량
+                                            <input type="number" class="form-control bg_input offerAmount" th:value="${offerInfo.offeringAmount}" min="0" name="offeringAmount" th:if="${listingInfo.listingApprove} == 'P'">
+                                            <input type="number" class="form-control bg_input offerAmount" th:value="${offerInfo.offeringAmount}" min="0" disabled th:if="${listingInfo.listingApprove} == 'E'">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            투자포인트
+                                            <input type="number" class="form-control bg_input offerPoint" th:value="${offerInfo.offeringPoint}" min="0" name="offeringPoint" th:if="${listingInfo.listingApprove} == 'P'">
+                                            <input type="number" class="form-control bg_input offerPoint" th:value="${offerInfo.offeringPoint}" min="0" disabled th:if="${listingInfo.listingApprove} == 'E'">
+                                        </div>
+                                    </div> 
+                                    
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            현재까지 공모 참여자 수
+                                            <input type="text" class="form-control bg_input" th:value="${sumOffer.count}" disabled>
+                                        </div>
+                                    </div>
+                                     <div class="col-lg-6">
+                                        <div class="form-group">
+                                            현재까지 모집된 주식 수
+                                            <input type="text" class="form-control bg_input" th:value="${sumOffer.sum}" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="form-group" >
+                                            <button type="button" class="btn btn_theme btn_md submit" th:if="${listingInfo.listingApprove} == 'P'">신청하기</button>
+                                            <button type="button" class="btn btn_theme btn_md result" th:if="${listingInfo.listingApprove} == 'E'">결과보기</button>
+                                            <p> </p>
+                                            <div class="view" style="display: none;">
+                                            <h4 th:text="${offerInfo.offeringPoint} + 'p를 투자하여 ' + ${offerInfo.offeringAmount} + '주를 신청하였습니다.'"></h4>
+                                            <br>
+                                            <h4 th:text="'참여자의 평균 투자포인트는 ' + ${sumOffer.avgPoint} + 'p 입니다.'"></h4>
+                                            <br>
+                                            <h4 th:text="'공모가 ' + ${listingInfo.listingPrice} + 'p에 ' + ${offerInfo.buyingAmount} + '주를 배정받았습니다.'"></h4>
+                                            <br>
+                                            <h4 th:text="'주식 공모에 사용된 포인트는 ' + ${offerInfo.buyingPoint} + 'p 입니다.'"></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="section_heading_center">
+                        
+                    </div>
+                </div>
+            </div>
+    </section>
+			<script th:src="@{/influencer/js/offering_apply.js}"></script>
+		</th:block>
+	</div>
+	
+
+</body>
+
+</html>

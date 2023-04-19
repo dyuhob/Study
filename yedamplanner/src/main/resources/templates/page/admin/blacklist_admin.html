@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/admin_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+
+			<div class="col-lg-8">
+				<form class="postform" method="post" action="/admin/memberdetail">
+					<input type="hidden" class="wheretogo" name="memberId" value="">
+				</form>
+				<div class="dashboard_common_table">
+					<h3>블랙리스트 회원</h3>
+					<div class="table-responsive-lg table_common_area">
+						
+						<table class="table">
+							<thead>
+								<tr>
+									<th >ID</th>
+									<th>이름</th>
+									<th>등급</th>
+									<th>차단일</th>
+									<th>사유</th>
+									<th>신고된 글</th>
+									<th>해지일</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="info : ${list}">
+									<td th:text="${info.memberId}" class="member"></td>
+									<td th:text="${info.memberName}"></td>
+									<td th:text="${info.memberGrade}"></td>
+									<div th:each="rvmap : ${info.rvo}">
+										<td th:text="${#dates.format(rvmap.reportDate, 'yyyy-MM-dd')}"></td>
+										<td th:text="${rvmap.reportReason}"></td>
+										<td th:text="${rvmap.reportPost}"></td>
+									</div>
+									<td th:text="${#dates.format(info.blackEnd, 'yyyy-MM-dd')}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<div class="pagination_area">
+					<ul class="pagination">
+						<li class="page-item"><a class="page-link" href="#"
+							aria-label="Previous"> <span aria-hidden="true">«</span> <span
+								class="sr-only">Previous</span>
+						</a></li>
+						<li class="page-item"><a class="page-link" href="#">1</a></li>
+						<li class="page-item"><a class="page-link" href="#">2</a></li>
+						<li class="page-item"><a class="page-link" href="#">3</a></li>
+						<li class="page-item"><a class="page-link" href="#"
+							aria-label="Next"> <span aria-hidden="true">»</span> <span
+								class="sr-only">Next</span>
+						</a></li>
+					</ul>
+				</div>
+			</div>
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+			<script th:src="@{/admin/js/member_admin.js}"></script>
+		</th:block>
+	</div>
+
+</body>
+
+</html>

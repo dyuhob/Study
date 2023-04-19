@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.planner.mapper.TimetableMapper">
+	<select id="selectTimetableList" resultType="TimetableVO">
+		SELECT * 
+		  FROM plan_timetable 
+		 where deldata = '1' 
+		   and plan_id = #{planId}
+		   order by program_start
+	</select>
+	
+	<select id="getTimetableList" parameterType="String" resultType="TimetableVO">
+	    SELECT *
+	    FROM plan_timetable
+	    WHERE deldata = '1'
+	        AND plan_id = #{planId}
+	        AND program_date = TO_TIMESTAMP_TZ(#{programDate}, 'YYYY-MM-DD HH24:MI:SS TZH:TZM')
+	    ORDER BY program_start
+	</select>
+
+	<select id="selectTimetableInfo" parameterType="String"
+		resultType="TimetableVO">
+		SELECT * 
+		  FROM plan_timetable
+		 WHERE plan_id = #{planId}
+		 
+	</select>
+
+	<insert id="insertTimetableInfo" parameterType="TimetableVO">
+	    <selectKey keyProperty="programId" resultType="java.lang.String" order="BEFORE">
+	        SELECT generate_program_id('t') FROM DUAL
+	    </selectKey>
+	    INSERT INTO plan_timetable (
+	        program_id, program_start, program_end, program_date, program_place,
+	        program_traffic, program_content, program_price, program_writer, plan_id
+	    ) VALUES (
+	        #{programId},
+	        #{programStart},
+	        #{programEnd},
+	        #{programDate},
+	        #{programPlace}, #{programTraffic}, #{programContent}, #{programPrice},
+	        #{programWriter}, #{planId}
+	    )
+	</insert>
+
+	<update id="deleteTimetableInfo" parameterType="String">
+		update plan_timetable
+		   set deldata = '0'
+		 where program_id = #{programId}
+	</update>
+
+</mapper>

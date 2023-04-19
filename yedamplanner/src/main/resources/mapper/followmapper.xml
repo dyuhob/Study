@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.follow.mapper.FollowMapper">
+  <insert id="insertFollow" parameterType="FollowVO">
+  	INSERT INTO
+  	follow(
+  	follow_id,
+  	follower_id)
+  	VALUES(
+  	#{followId},
+  	#{followerId})
+  </insert>
+  
+  <select id="followCheck" parameterType="FollowVO" resultType="Integer">
+  	SELECT COUNT(*)
+  	FROM follow
+  	WHERE follow_id = #{followId}
+  	AND follower_id = #{followerId}
+  </select>
+  
+  <select id="followingList" parameterType="String" resultType="String">
+  	SELECT follow_id
+  	FROM follow
+  	WHERE follower_id = #{followerId}	
+  </select>
+
+  <select id="followerList" parameterType="String" resultType="String">
+  	SELECT follower_id
+  	FROM follow
+  	WHERE follow_id = #{followId}
+  </select>
+  
+  <delete id="unFollow" parameterType="FollowVO">
+	DELETE FROM follow
+	WHERE follow_id = #{followId}
+	AND follower_id = #{followerId}
+  </delete>
+  
+  </mapper>
+  

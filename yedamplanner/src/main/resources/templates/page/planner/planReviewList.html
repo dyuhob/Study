@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+
+<div>
+	<th:block layout:fragment="content">
+
+		<!-- Tour Search Areas -->
+		<section id="explore_area" class="section_padding">
+			<div class="container">
+				<!-- Section Heading -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+					<br>
+					<br>
+						<div class="section_heading_center">
+							<h2>플래너 리뷰</h2>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="left_side_search_area">
+							<div class="left_side_search_boxed">
+								<div class="left_side_search_heading">
+									<h5>리뷰 검색</h5>
+								</div>
+								<div class="name_search_form">
+									<input type="text" class="form-control" placeholder="플래너명">
+									<i class="fas fa-search"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="col-lg-12">
+								<table class="table">
+									<thead>
+										<tr>
+											<th
+												style="padding-top: 25px; padding-bottom: 25px; text-align: center;">플래너명</th>
+											<th
+												style="padding-top: 25px; padding-bottom: 25px; text-align: center;">작성자</th>
+											<th
+												style="padding-top: 25px; padding-bottom: 25px; text-align: center;">평점</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="list : ${planReviewList}" id="reviewList">
+											<td style="display: none;" th:text="${list.planReviewId}" />
+											<td style="display: none;" th:text="${list.planId}" />
+											<td class="planName" style="padding-top: 25px; padding-bottom: 25px; text-align: center;"
+												th:text="${list.planName}" />
+											<td
+												style="padding-top: 25px; padding-bottom: 25px; text-align: center;"
+												th:text="${list.rater}" />
+											<td
+												style="padding-top: 25px; padding-bottom: 25px; text-align: center;"
+												th:text="'★' + ${list.prStar}" />
+										</tr>
+									</tbody>
+								</table>
+								<div class="pagination_area">
+									<ul class="pagination">
+										<li class="page-item"><a class="page-link" href="#"
+											aria-label="Previous"><span aria-hidden="true">&laquo;</span><span
+												class="sr-only">Previous</span></a></li>
+										<li class="page-item"><a class="page-link" href="#">1</a></li>
+										<li class="page-item"><a class="page-link" href="#">2</a></li>
+										<li class="page-item"><a class="page-link" href="#">3</a></li>
+										<li class="page-item"><a class="page-link" href="#"
+											aria-label="Next"><span aria-hidden="true">&raquo;</span><span
+												class="sr-only">Next</span></a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<script th:src="@{/planner/js/planner_func.js}"></script>
+	</th:block>
+</div>
+</html>

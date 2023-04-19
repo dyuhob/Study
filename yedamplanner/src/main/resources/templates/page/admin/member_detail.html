@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/admin_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+		
+    <div class="col-lg-8">
+                    <div class="dashboard_common_table">
+                        <h3>회원 정보</h3>
+                        <div class="profile_update_form">
+                            <form action="/user/modifymemberinfo" id="profile_form_area" method="POST">
+                                <input type="hidden" th:value="${vo.memberId}" name="memberId">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="f-name">이름</label>
+                                            <input type="text" class="form-control" id="f-name" placeholder="Your Name"
+                                                th:value="${vo.memberName}" disabled="true" name="memberName">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="l-name">이메일</label>
+                                            <input type="text" class="form-control" id="l-name" th:value="${vo.memberEmail}" disabled="true" name="memberEmail">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="mail-address">전화번호</label>
+                                            <input type="text" class="form-control" id="mail-address"
+                                                th:value="${vo.memberPhone}" disabled="true" name="memberPhone">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="u-name">주소</label>
+                                            <input type="text" class="form-control" id="u-name" th:value="${vo.memberAddr}" disabled="true" name="memberAddr">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label for="mobil-number">은행</label>
+                                            <input type="text" class="form-control" id="mobil-number"
+                                                th:value="${vo.memberBank}" disabled="true" name="memberBank">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group change_password_field">
+                                            <label for="password">계좌</label>
+                                            <input type="text" class="form-control" id="password" th:value="${vo.memberAccount}" disabled="true" name="memberAccount">
+                                            
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+    <div class="go-top">
+        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i>
+    </div>
+	</th:block>
+	</div>
+    
+</body>
+
+</html>

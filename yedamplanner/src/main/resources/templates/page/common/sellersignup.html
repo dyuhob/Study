@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout/default_layout">
+
+<body>
+<div>
+  <th:block layout:fragment="content">
+    <!--  Common Author Area -->
+    <section id="common_author_area" class="section_padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 offset-lg-2">
+                    <div class="common_author_boxed">
+                        <div class="common_author_heading">
+                            <h2>판매자 회원 가입 정보</h2>
+                        </div>
+                        <div class="common_author_form">
+                        	<div class="idTestForm">
+                                    <input type="text" class="form-control" placeholder="ID" name="idTest" value=""/>
+                                    <button class="btn btn_theme btn_md">ID중복검사</button>
+									<h4 class="idtest_result"></h4>
+                                </div>
+                            <form action="/common/sellersignup" method="POST" id="main_author_form">
+                                <div class="form-group">
+                                    <input type="hidden" class="hidden_id" name="memberId"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Password" name="memberPw"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="사업자명" name="memberName"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="사업자등록번호" id="crn_input"/>
+                                    <button class="btn btn_theme btn_md" id="crn" type="button">사업자등록번호 확인</button>
+									<h4 class="crntest_result"></h4>
+									 <input type="hidden" class="hidden_crn" name="memberCrn"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="이메일" name="memberEmail"/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="전화번호" name="memberPhone"/>
+                                </div>
+                                   <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="사업장 소재지" name="memberAddr"/>
+                                </div>
+                                <div class="common_form_submit">
+                                    <button class="btn btn_theme btn_md" disabled="true" id="signupsubmit">가입하기</button>
+                                </div>
+                                <div class="have_acount_area other_author_option" >
+                                    <div class="line_or">
+                                        <span>or</span>
+                                    </div>
+                                  
+                                    <p>이미 계정이 있으신가요? <a href="login.html">로그인하기</a></p>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="go-top">
+        <i class="fas fa-chevron-up"></i>
+        <i class="fas fa-chevron-up"></i>
+    </div>
+    <script th:src="@{/common/js/sellersignup.js}"></script>
+    
+ </th:block>
+</div>
+</body>
+
+</html>

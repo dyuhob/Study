@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/admin_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+			<div class="col-lg-8">
+				<div class="dashboard_common_table">
+					<h3>상장 신청</h3>
+					<div class="table-responsive-lg table_common_area">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>신청번호</th>
+									<th>신청자</th>
+									<th>신청일시</th>
+									<th>마감일시</th>
+									<th>신청 주식 수</th>
+									<th>처리 결과</th>
+									<th>처리</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="info : ${list}">	
+									<td th:text="${info.listingNo}"></td>
+									<td th:text="${info.influencerId}"></td>
+									<td class="test" th:text="${#dates.format(info.applyDate, 'yyyy-MM-dd')}"></td>
+									<td class="end" th:text="${#dates.format(info.endDate, 'yyyy-MM-dd')}"></td>
+									<td th:text="${info.stockAmount}"></td>
+									<td class="waiting" th:if="${info.listingApprove} == 'N'" >대기</td>
+									<td class="complete" th:if="${info.listingApprove} == 'P'" >진행 중</td>
+									<td class="cancele" th:if="${info.listingApprove} == 'R'" >거부</td>
+									<td class="complete" th:if="${info.listingApprove} == 'E'" >상장 완료</td>
+									<td>
+										<div th:if="${info.listingApprove} == 'N'">
+										<button class="btn btn-primary btn-sm approve">승인</button>
+										<button class="btn btn-danger btn-sm reject">거부</button>
+										</div>
+										<div th:if="${info.listingApprove} == 'P'">
+											<button class="btn btn-primary btn-sm listing" disabled>상장</button>
+											<button class="btn btn-danger btn-sm reject">거부</button>
+										</div>
+									</td>
+									
+									<input type="hidden" th:value="${info.stockAmount}" class="stockAmount">
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				
+				<div class="pagination_area">
+					<form action="/admin/listingadmin" method="get" id="actionForm">
+					<input type="hidden" th:value="${page.cri.pageNum}" name="pageNum">
+					<input type="hidden" th:value="${page.cri.amount}" name="amount">
+					</form>
+					<div class="col-lg-12">
+					<ul class="pagination">
+						<li class="page-item previous" th:if="${page.prev}" th:href="${pageMaker.startPage-1}"><a class="page-link" aria-label="Previous"> <span aria-hidden="true">«</span>
+			   			<span class="sr-only">Previous</span></a></li>
+						<nobr th:each="num : ${#numbers.sequence(page.startPage,page.endPage)}">
+						<li class="page-item pagemove"><a class="page-link" th:href="${num}" th:text="${num}"></a></li>
+						</nobr>
+						<li class="page-item next" th:if="${page.next}" th:href="${pageMaker.endPage+1}"><a class="page-link" aria-label="Next"> <span aria-hidden="true">»</span>
+							<span class="sr-only">Next</span></a></li>
+					</ul>
+					</div>
+				</div>
+			</div>
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+			<script th:src="@{/admin/js/listing_admin.js}"></script>
+		</th:block>
+	</div>
+
+</body>
+
+</html>

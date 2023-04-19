@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yedam.app.seller.mapper.SellerMapper">
+	<select id="selectProductList" resultType="ProductVO">
+		select  pp.package_id,
+				pp.seller_id, 
+				pp.package_price, 
+				pp.package_num,
+				
+				p.plan_id,
+				p.plan_start, 
+				p.plan_end, 
+				p.plan_name
+				
+		  from  plan_package pp 
+		 inner join	planner p
+		    on ( pp.plan_id = p.plan_id and pp.seller_id = #{sellerId} )
+	</select>
+
+	<insert id="insertProduct" parameterType="ProductVO">
+		<!-- SELECT 쿼리를 실행하여 자동으로 문자열을 생성하고, package_id에 사용 -->
+		<selectKey keyProperty="packageId"
+			resultType="java.lang.String" order="BEFORE">
+			SELECT generate_package_id('s')
+			FROM DUAL
+		</selectKey>
+		<!-- 생성된 문자열을 ackage_id에 사용하여 INSERT 쿼리 실행 -->
+		INSERT INTO plan_package (
+		package_id, seller_id, package_price,
+		package_num, plan_id
+		) VALUES (
+		#{packageId}, #{sellerId},
+		#{packagePrice}, #{packageNum}, #{planId}
+		)
+	</insert>
+
+</mapper>

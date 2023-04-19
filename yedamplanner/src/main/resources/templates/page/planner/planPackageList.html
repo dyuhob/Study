@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+
+<div>
+	<th:block layout:fragment="content">
+
+		<!-- Tour Search Areas -->
+		<section id="explore_area" class="section_padding">
+			<div class="container">
+				<!-- Section Heading -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+					<br>
+					<br>
+						<div class="section_heading_center">
+							<h2>플래너 패키지 목록</h2>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-lg-3">
+						<div class="left_side_search_area">
+							<div class="left_side_search_boxed">
+								<div class="left_side_search_heading">
+									<h5>플래너 패키지 검색</h5>
+								</div>
+								<div class="name_search_form">
+									<input type="text" class="form-control"
+										placeholder="#단어"> <i class="fas fa-search"></i>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="col-lg-4 col-md-6 col-sm-6 col-12"
+								th:each="plannerInfo : ${packageList}">
+								<div class="theme_common_box_two img_hover">
+									<div class="theme_two_box_img openPlanner"
+										th:attr="data-plan-id=${plannerInfo.planId}">
+										<img th:if="${plannerInfo.city == 'CB'}" src="/assets/img/finalproject-img/cebu_island.jpg" alt="img">
+										<img th:if="${plannerInfo.city == 'DG'}" src="/assets/img/finalproject-img/daegu_basic.jpg" alt="img">
+										<img th:if="${plannerInfo.city == 'BS'}" src="/assets/img/finalproject-img/busan.jpg" alt="img">
+										<img th:if="${plannerInfo.city == 'SE'}" src="/assets/img/finalproject-img/seoul.jpg" alt="img">
+										<img th:if="${plannerInfo.city == 'LD'}" src="/assets/img/finalproject-img/london.jpg" alt="img">
+										<img th:if="${plannerInfo.city == 'HW'}" src="/assets/img/finalproject-img/hawaii.jpg" alt="img">
+										<img th:if="${plannerInfo.city == 'LA'}" src="/assets/img/finalproject-img/la.jpg" alt="img">
+										<img th:if="${plannerInfo.city == 'NY'}" src="/assets/img/finalproject-img/newyork.jpeg" alt="img">
+										<img th:if="${plannerInfo.city == 'TK'}" src="/assets/img/finalproject-img/tokyo.jpg" alt="img">
+										<p style="display: none;" th:text="${plannerInfo.planId}" />
+										<p th:text="${plannerInfo.city}">
+											<i class="fas fa-map-marker-alt"></i>
+										</p>
+									</div>
+									<div class="theme_two_box_content">
+										<h4>
+											<a href="tour-details.html" th:text="${plannerInfo.planName}"></a>
+										</h4>
+										<p>
+											<span class="review_rating">2</span> / <span
+												class="review_rating" th:text="${plannerInfo.planMax}"></span>
+											<span class="review_count"
+												th:text="'업체: ' + ${plannerInfo.hostId}"></span>
+										</p>
+										<p>
+											<span
+												th:text="${#dates.format(plannerInfo.planStart, 'yyyy-MM-dd')}"></span>
+											~ <span
+												th:text="${#dates.format(plannerInfo.planEnd, 'yyyy-MM-dd')}"></span>
+										</p>
+										<p th:text="${plannerInfo.planTag}"></p>
+									</div>
+								</div>
+							</div>
+
+							<div class="col-lg-12">
+								<div class="pagination_area">
+									<ul class="pagination">
+										<li class="page-item"><a class="page-link" href="#"
+											aria-label="Previous"> <span aria-hidden="true">&laquo;</span>
+												<span class="sr-only">Previous</span>
+										</a></li>
+										<li class="page-item"><a class="page-link" href="#">1</a></li>
+										<li class="page-item"><a class="page-link" href="#">2</a></li>
+										<li class="page-item"><a class="page-link" href="#">3</a></li>
+										<li class="page-item"><a class="page-link" href="#"
+											aria-label="Next"> <span aria-hidden="true">&raquo;</span>
+												<span class="sr-only">Next</span>
+										</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<script th:src="@{/planner/js/planner_func.js}"></script>
+	</th:block>
+</div>
+</html>

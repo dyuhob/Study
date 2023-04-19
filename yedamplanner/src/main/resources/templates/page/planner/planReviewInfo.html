@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+
+<div>
+	<th:block layout:fragment="content">
+
+		<!-- Tour Search Areas -->
+		<section id="explore_area" class="section_padding">
+			<div class="container">
+				<!-- Section Heading -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+					<br>
+					<br>
+						<div class="section_heading_center">
+							<h2>플래너 리뷰</h2>
+						</div>
+					</div>
+				</div>
+				<div class="row d-flex justify-content-center">
+					<div class="col-lg-9">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="profile_update_form">
+									<form action="/planReviewInfo/{planReviewId}"
+										id="profile_form_area" method="GET">
+										<div class="row">
+											<input type="hidden" class="form-control" id="f-name"
+												disabled="true" name="planId" th:value="${info.planId}">
+											<div class="form-group">
+												<label for="f-name">플래너명</label> <input type="text"
+													class="form-control" id="f-name" disabled="true"
+													name="planName" th:value="${info.planName}">
+											</div>
+											<div class="form-group">
+												<label for="l-name">작성자</label> <input type="text"
+													class="form-control" id="l-name" disabled="true"
+													name="rater" th:value="${info.rater}">
+											</div>
+											<div class="form-group">
+												<label for="mail-address">평점</label> <input type="text"
+													class="form-control" id="mail-address" disabled="true"
+													name="prStar" th:value="${info.prStar}">
+											</div>
+											<div class="form-group">
+												<label for="u-name">내용</label>
+												<textarea type="text" class="form-control" id="u-name"
+													disabled="true" name="content" th:text="${info.content}"></textarea>
+											</div>
+										</div>
+									</form>
+									<br>
+									<button id="planBtn" type="submit" class="btn btn-primary">플래너
+										바로가기</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<script th:src="@{/planner/js/planner_func.js}"></script>
+		<script>
+			const planBtn = document.getElementById("planBtn");
+
+			planBtn.addEventListener("click",
+					function() {
+						const planId = document
+								.querySelector('input[name="planId"]').value;
+						console.log(planId);
+
+						$.ajax({
+							type : 'get',
+							url : '/planner/main/' + planId,
+							async : true,
+							success : function(result) {
+								console.log(result)
+
+								alert("입장 성공")
+								location.href = "/planner/main/" + planId;
+
+							},
+							error : function(request, status, error) {
+								console.log(error)
+								alert("입장 실패")
+							}
+						});
+					});
+		</script>
+	</th:block>
+</div>
+</html>

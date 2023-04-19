@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/user_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+			<div class="col-lg-8">
+				<div class="dashboard_common_table">
+					<h3>상장 신청</h3>
+					<div class="table-responsive-lg table_common_area">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>신청번호</th>
+									<th>신청일시</th>
+									<th>처리 결과</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="info : ${list}">	
+									<td  th:text="${info.listingNo}"></td>
+									<td th:text="${#dates.format(info.applyDate, 'yyyy-MM-dd')}"></td>
+									<td class="waiting" th:if="${info.listingApprove} == 'N'" >대기</td>
+									<td class="complete" th:if="${info.listingApprove} == 'P'" >진행 중</td>
+									<td class="cancele" th:if="${info.listingApprove} == 'R'" >거부</td>
+									<td class="complete" th:if="${info.listingApprove} == 'E'" >상장 완료</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div>
+						<button class="btn btn_theme btn_md" id="listing_submit">신청</button>
+					</div>
+				</div>
+			</div>
+			
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+			<script th:src="@{/influencer/js/listing_apply.js}"></script> 
+		</th:block>
+	</div>
+
+</body>
+
+</html>

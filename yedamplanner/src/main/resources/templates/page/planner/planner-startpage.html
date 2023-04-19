@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/planner_layout">
+<div>
+	<th:block layout:fragment="planner_content">
+		<!-- Tour Search Areas -->
+		<section id="explore_area" class="planner_padding">
+			<div class="container-fluid">
+				<!-- Section Heading -->
+				<div class="row">
+					<div class="col-lg-12 col-md-12 col-sm-12 col-12">
+						<div class="section_heading_center"></div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="row_left">
+						<th:block
+							th:replace="fragments/planner_sidebar :: planner_sidebarFragment"></th:block>
+					</div>
+					<div class="row_right">
+						<div class="row">
+							<div id="right_append" class="col-lg-12">
+								<!-- 플래너 최상단 -->
+								<div class="first">
+									<div class="cruise_search_result_wrapper city_wrapper">
+										<div class="cruise_search_item" th:style="'background-image: url('+ ${cityInfo.cityImg}+');'">
+											<div class="cruise_item_inner_content">
+												<div id="trip_info" class="cruise_content_top_left" value="placeId">
+														<ul>
+															<li><span th:text="${#dates.format(plannerInfo.planStart, 'yy/MM/dd')} + '~' + ${#dates.format(plannerInfo.planEnd, 'yy/MM/dd')}">출발일~도착일</span>
+															<i class="fas fa-circle"></i></li>
+															<li id="trip_country" th:text="${cityInfo.country}">나라</li>
+														</ul>
+												</div>
+												<div class="city_name">
+													<h2 th:text="${cityInfo.cityName}" style="color: white;">도시</h2>
+												</div>
+												<br>
+												<div class="city_info_top">
+													<h5>환율</h5>
+												</div>
+												<div class="city_info_middle">
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div id="main">
+									<div class="popular_place">
+										<div class="row">
+											<div class="col-md-6 travel_place" th:each="pPlace: ${popularPlaces}">
+												<div class="theme_common_box_two img_hover">
+													<div class="theme_two_box_img mainheight"
+													th:style="'background-image:url('+ ${pPlace.PlaceImg} +');'">
+														<p th:text="${pPlace.placeAdd}">
+															여행지 <i class="fas fa-map-marker-alt"></i>
+														</p>
+													</div>
+													<div class="theme_two_box_content">
+														<h4>
+															<a href="tour-details.html" th:text="${pPlace.PlaceName}">장소</a>
+														</h4>
+														<p>
+															<span class="review_rating">별점</span> <span
+																class="review_count">리뷰</span>
+														</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="recommend">
+										<div class="row">
+											<div class="place_info">
+												<div class="top_destinations_box img_hover place_info_detail" 
+												th:style="'background-image:url(' + @{/assets/img/finalProject-img/sebu4.jpg} +');'">
+													<div class="top_destinations_box_content">
+														<h4>
+															<a href="top-destinations-details.html">여행지 정보</a>
+														</h4>
+													</div>
+												</div>
+											</div>
+											<div class="recommend_place_list">
+												<div class="recommend_place" th:each="rPlace:${recommendPlaces}">
+													<div class="top_destinations_box recommend_place_detail"
+														th:style="'background-image:url('+ ${rPlace.placeImg} +');'">
+														<div class="top_destinations_box_content">
+															<div class="heart_destinations">
+																<i class="fas fa-heart"></i>
+															</div>
+															<h4>
+																<a href="top-destinations-details.html"
+																	th:text="${rPlace.placeName}">여행지 정보</a>
+															</h4>
+														</div>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="popular_planner">
+										<div class="dashboard_common_table">
+											<h3>인기 플래너</h3>
+											<div class="table-responsive-lg table_common_area">
+												<table class="table">
+													<thead>
+														<tr>
+															<th>순위</th>
+															<th>플래너 이름</th>
+															<th>호스트</th>
+															<th>참여인원</th>
+															<th>좋아요수</th>
+															<th>여행일</th>
+														</tr>
+													</thead>
+													<tbody>
+														<tr th:each="pPlanner:${popularPlanner}">
+															<td th:text="${pPlannerStat.count}">1</td>
+															<td th:text="${pPlanner.planName}">미국으로</td>
+															<td th:text="${pPlanner.hostId}">김00</td>
+															<td th:text="${pPlanner.planMax}+명">5명</td>
+															<td th:text="'♥'+${pPlanner.planLike}"></td>
+															<td th:text="${#dates.format(pPlanner.planStart, 'yy/MM/dd')}+'~'+${#dates.format(pPlanner.planEnd, 'yy/MM/dd')}"></td>
+														</tr>
+													</tbody>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 플래너 입장 페이지 -->
+								<!-- 플래너 마커 선택 상단 -->
+								<div id="marker_top" style="display: none;">
+									<div class="cruise_search_result_wrapper">
+										<div id="head_Img" class="cruise_search_item card" style="color: white;">
+											<div class="cruise_item_inner_content">
+												<div class="cruise_content_top_wrapper">
+													<div id="trip_info" class="cruise_content_top_left" value="placeId">
+														<ul>
+															<li><span id="trip_period">출발일~도착일</span>
+															<i class="fas fa-circle"></i></li>
+															<li id="trip_country">나라</li>
+														</ul>
+														<h4 id="trip_place">여행지</h4>
+														<p></p>
+														<h5>
+															<i class="fas fa-map-marker-alt"></i>
+															<span id="trip_placeadd">주소</span>
+														</h5>
+													</div>
+													<div class="cruise_content_top_right">
+													</div>
+												</div>
+												<div class="cruise_content_bottom_wrapper">
+													<div class="cruise_content_bottom_left">
+														<h5>카테고리</h5>
+													</div>
+													<div class="cruise_content_bottom_right">
+														<button class="btn btn_theme btn_md deco_heart" onclick="addLike();" style="height: 33px;">
+															<i class="fas fa-heart"></i>찜하기
+														</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 후기 -->
+								<div id="markerInfo" style="display: none;">
+									<div class="place_detail">
+										<div class="row">
+											<div class="row_place_left">
+												<h5 class="place_reviews_detail">리뷰 요약</h5>
+												<div class="row">
+													<div class="row_star_grape">
+														<p>5</p>
+														<p>4</p>
+														<p>3</p>
+														<p>2</p>
+														<p>1</p>
+													</div>
+													<div class="row_bar">
+														<div class="star_info">
+															<div class="star_rate">
+																<div class="star_range_bar">
+																	<div class="five_star">50%</div>
+																</div>
+																<div class="star_range_bar">
+																	<div class="four_star">50%</div>
+																</div>
+																<div class="star_range_bar">
+																	<div class="three_star">50%</div>
+																</div>
+																<div class="star_range_bar">
+																	<div class="two_star">50%</div>
+																</div>
+																<div class="star_range_bar">
+																	<div class="one_star">50%</div>
+																</div>
+															</div>
+														</div>
+													</div>
+													<div class="row_star_detail">
+														<div class="big_star_point">
+															<h2 id="starAvg">3.7</h2>
+														</div>
+														<div class="review_star_all"></div>
+														<div id="review_count" class="place_review_count">
+															<p>리뷰 32개</p>
+														</div>
+													</div>
+												</div>
+												<div class="middle_reivews">
+													<hr>
+												</div>
+												<p>리뷰</p>
+												<div class="place_review_detail"></div>
+											</div>
+											<div class="row_place_right">
+												<h4 id="phone">전화번호</h4>
+												<div class="operating_time">
+													<h4>영업시간</h4>
+													<h5>월요일 : 휴무일</h5>
+													<h5>화요일 : 9:00 ~ 22:00</h5>
+													<h5>수요일 : 9:00 ~ 22:00</h5>
+													<h5>목요일 : 9:00 ~ 22:00</h5>
+													<h5>금요일 : 9:00 ~ 22:00</h5>
+													<h5>토요일 : 9:00 ~ 22:00</h5>
+													<h5>일요일 : 9:00 ~ 22:00</h5>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 플래너 마커 선택 페이지 -->
+								<!-- 찜 플레이스 -->
+								<div class="place_like" style="display: none;">
+									<div id="Likeplaces" class="dashboard_common_table">
+										<h4>찜 플레이스</h4>
+										<hr>
+									</div>
+								</div>
+								<!-- 찜 플레이스 -->
+								<!-- 체크리스트 -->
+								<div class="checkList" style="display: none;">
+									<div class="checkListDetail">
+										<button class="btn firstbtn" id="allCheck" onclick="showAllCheck();">전체</button>
+										<button class="btn otherbtn" id="perCheck" onclick="showPerCheck();">개인</button>
+										<hr>
+										<!-- 전체 체크리스트 -->
+										<div class="allCheckList" style="display: none;">
+											<div class="dashboard_common_table"
+												style="position: relative;">
+												<h3>전체 체크리스트</h3>
+												<button type="button" class="btn checkAdd"
+													onclick="addAllCheckBox();">
+													<img src="/assets/img/finalproject-img/plus.png">
+												</button>
+												<div class="table-responsive-lg table_common_area">
+													<table class="check_list table allCheckTable">
+														<thead>
+															<tr>
+																<th>준비물</th>
+																<th>담당 유저</th>
+																<th></th>
+															</tr>
+														</thead>
+														<tbody class="allCheck">
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<!-- 전체 체크리스트 -->
+										<!-- 개인 체크리스트 -->
+										<div class="personalCheckList" style="display: none;">
+											<div class="dashboard_common_table"
+												style="position: relative;">
+												<h3>개인 체크리스트</h3>
+												<button type="button" class="btn checkAdd"
+													onclick="addPersonalCheckBox();">
+													<img src="/assets/img/finalproject-img/plus.png">
+												</button>
+												<div class="table-responsive-lg table_common_area">
+													<table class="check_list table personalCheckTable">
+														<thead>
+															<tr>
+																<th></th>
+															</tr>
+														</thead>
+														<tbody class="personalCheck">
+														</tbody>
+													</table>
+												</div>
+											</div>
+										</div>
+										<!-- 개인 체크리스트 -->
+									</div>
+								</div>
+								<!-- 체크리스트 -->
+								<!-- 장부 -->
+								<div class="budget" style="display: none;">
+									<div class="travel_date"></div>
+									<hr>
+									<div class="budget_planner">
+										<div class="dashboard_common_table"
+											style="position: relative;">
+											<h4>예산 장부</h4>
+											<button class="delbtn" onclick="deletBtn();">삭제</button>
+											<button type="button" class="btn checkAdd"
+												onclick="insertBudget();">
+												<img src="/assets/img/finalproject-img/plus.png">
+											</button>
+											<div class="table-responsive-lg table_common_area">
+												<table class="table budget_table">
+													<thead>
+														<tr>
+															<th rowspan="2">항목</th>
+															<th colspan="2">비용</th>
+															<!--<th>비용</th>-->
+															<th rowspan="2">세부사항</th>
+
+															<th rowspan="2">메모</th>
+															<th rowspan="2"><input type="checkBox" id="allCheck"
+																onclick="allChecked(event);"></th>
+														</tr>
+														<tr>
+															<!--<th>항목</th>-->
+															<th>원화</th>
+															<th>환율</th>
+															<!--<th>세부사항</th>-->
+															<!--<th>버튼</th>-->
+															<!--<th>메모</th>-->
+															<!--<th>삭제</th>-->
+														</tr>
+													</thead>
+													<tbody class="budgetDate">
+													</tbody>
+													<tfoot>
+														<tr>
+															<td>총 액</td>
+															<td></td>
+															<td></td>
+															<td></td>
+															<td class="total">0</td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+										</div>
+									</div>
+									<div class="budget_planner">
+										<div class="dashboard_common_table">
+											<h4>합계</h4>
+											<div class="table-responsive-lg table_common_area">
+												<table class="table budget_table">
+													<thead>
+														<tr>
+															<th>일 자</th>
+															<th>합 계</th>
+														</tr>
+													</thead>
+													<tbody class="sumResult">
+													</tbody>
+													<tfoot>
+														<tr>
+															<td>총 액</td>
+															<td class="sumResultTotal"></td>
+														</tr>
+													</tfoot>
+												</table>
+											</div>
+										</div>
+									</div>
+								</div>
+								<!-- 장부 -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+		<!-- 리뷰 템플릿-->
+		<div id="review_detail" class="place_review_boxed"
+			style="display: none;">
+			<div class="place_reviewer_info">
+				<div class="row">
+					<div class="row_img">
+						<img src="/assets/img/finalproject-img/user.png" alt="img">
+					</div>
+					<div class="place_review_date">
+						<h5 id="reviewerId">김00</h5>
+						<h6 id="reviewDate">2023/03/17</h6>
+					</div>
+				</div>
+			</div>
+			<div class="place_review_star_all star_append">
+				<span id="reviewStar">1</span>
+			</div>
+			<h6 class="reviewContent">후기</h6>
+			<div class="review_pictures">
+				<div class="row review_pictureList"></div>
+				<hr>
+			</div>
+		</div>
+		<!-- 리뷰 모달 템플릿-->
+		<!-- search -->
+		<div class="search-overlay">
+			<div class="d-table">
+				<div class="d-table-cell">
+					<div class="search-overlay-layer"></div>
+					<div class="search-overlay-close" onclick='pictureDelete()'>
+						<span class="search-overlay-close-line"></span> <span
+							class="search-overlay-close-line"></span>
+					</div>
+					<div class="search-overlay-form relative_modal">
+						<div class="row absolute_modal">
+							<div class="picture-arrow-left">
+								<form>
+									<button type="button" class="owl-prev">
+										<i class="fas fa-arrow-left"></i>
+									</button>
+								</form>
+							</div>
+							<div class="review_img_detail">
+								<img>
+							</div>
+							<div class="picture-arrow-right">
+								<form>
+									<button type="button" class="owl-next">
+										<i class="fas fa-arrow-right"></i>
+									</button>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 찜 플레이스 장소 후기 -->
+		<div class="dashboard_common_table lrTemplate" id="likeReviewTemplate"
+			style="display: none;">
+			<div class="wallet_area_boxed like_review" style="margin-top: -8px;">
+				<div class="row">
+					<div class="like_review_detail">
+						<h3>리뷰</h3>
+						<button class="search_btn btn" type="button">
+							<i class="fas fa-search"></i>
+						</button>
+					</div>
+					<div class="like_left review_scroll"></div>
+					<div class="like_right">
+						<div class="review_total_imgs">
+							<div class="review_total_img"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 찜 플레이스 장소 후기 -->
+		<!-- 찜 플레이스 장소 후기 내부-->
+		<div class="review_boxed" style="display: none;">
+			<div class="reivewer_info">
+				<img class="likeReviewUser" src="/assets/img/finalproject-img/user.png" alt="img">
+				<h5 class="writerId">user</h5>
+				<h5 class="writeDate">날짜</h5>
+			</div>
+			<hr>
+			<div class="review_star_all">
+				<span class="likeStar">별점</span>
+			</div>
+			<h6 class="likeReviewContent">후기</h6>
+			<div class="mini_review_picture" style="display: flex;"></div>
+		</div>
+		<!-- 찜 플레이스 장소 후기 내부-->
+		<!-- 장부 템플릿 -->
+		<div style="display: none;">
+			<table>
+				<tbody>
+					<tr class="budgetTemplate" style="display: none;">
+						<td class="info" contenteditable="false" data-default=""
+							ondblclick="doubleClick(event);" onkeypress="enterPress(event);"></td>
+						<td class="won" contenteditable="false" data-default=""
+							ondblclick="doubleClick(event);" onkeypress="enterPress(event);"></td>
+						<td class="exchangeRate" contenteditable="false" data-default=""></td>
+						<td class="detail" contenteditable="false" data-default=""
+							ondblclick="doubleClick(event);" onkeypress="enterPress(event);"></td>
+						<td class="memo" contenteditable="false" data-default=""
+							ondblclick="doubleClick(event);" onkeypress="enterPress(event);"></td>
+						<td class="checkBox"><input type="checkBox" class="tdCheck"></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<!-- 장부 템플릿 -->
+	</th:block>
+</div>

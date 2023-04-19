@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="layout/default_layout">
+
+<body>
+	<div>
+		<th:block layout:fragment="content">
+			<input type="hidden" value="1" class="chartVariable">
+			<div class="col-lg-8"></div>
+			<!-- Tour Search Areas -->
+			<section id="tour_details_main" class="section_padding"
+				style="padding-top: 200px;">
+				<div class="container">
+					<div class="row">
+						<div class="col-lg-8">
+							<div class="tour_details_leftside_wrapper">
+								<div class="tour_details_heading_wrapper">
+									<div class="tour_details_top_heading">
+										<h2 th:text="'주식명 : ' + ${stockId}"></h2>
+									</div>
+									<div class="tour_details_top_heading_right">
+									</div>
+								</div>
+								<div class="tour_details_top_bottom">
+									<div class="toru_details_top_bottom_item showtoday"  style="cursor: pointer;">
+										<div class="tour_details_top_bottom_icon">
+											<i class="fas fa-clock"></i>
+										</div>
+										<div class="tour_details_top_bottom_text">
+											<h5>시간</h5>
+											<p>오늘</p>
+										</div>
+									</div>
+									<div class="toru_details_top_bottom_item showoneday"  style="cursor: pointer;">
+										<div class="tour_details_top_bottom_icon">
+											<i class="fas fa-clock"></i>
+										</div>
+										<div class="tour_details_top_bottom_text">
+											<h5>1일</h5>
+											<p>2주</p>
+										</div>
+									</div>
+									<div class="toru_details_top_bottom_item showthreeday"  style="cursor: pointer;">
+										<div class="tour_details_top_bottom_icon">
+											<i class="fas fa-clock"></i>
+										</div>
+										<div class="tour_details_top_bottom_text">
+											<h5>3일</h5>
+											<p>월</p>
+										</div>
+									</div>
+									<div class="toru_details_top_bottom_item">
+										<div class="tour_details_top_bottom_icon">
+											<a href="#!" data-bs-toggle="modal" data-bs-target="#exchangeModal"><button type="button" class="btn btn_theme btn_md">거래내역</button></a>
+										</div>
+									</div>
+								</div>
+								<div class="tour_details_boxed">
+									<h3 class="heading_theme">주식 차트</h3>
+
+									<div id="chart_div"></div>
+								</div>
+								<div class="tour_details_boxed">
+									<h3 class="heading_theme">주식 거래소</h3>
+
+									<div id="chart_div2"></div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-4">
+							<div class="tour_details_right_sidebar_wrapper">
+								<div class="tour_detail_right_sidebar">
+									<div class="tour_details_right_boxed">
+										<div class="tour_details_right_box_heading">
+											<h3>주식 정보</h3>
+										</div>
+										<div class="valid_date_area">
+											<div class="valid_date_area_one">
+												<h5 >주가 총액</h5>
+												<p class="capital"></p>
+											</div>
+											<div class="valid_date_area_one">
+												<h5>발행 주식 수</h5>
+												<p class="quantity"></p>
+											</div>
+										</div>
+										<div class="tour_package_details_bar_list">
+											<h5>주식 상세</h5>
+											<ul>
+												<li class="allocation"><i class="fas fa-circle"></i> 최근 배당 금액 :</li>
+												<li class="largeHolder"></li>
+											</ul>
+										</div>
+										<div class="tour_package_details_bar_price">
+											<h5>가격</h5>
+											<div class="tour_package_bar_price">
+												<h3 class="price">
+													
+												</h3>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="tour_detail_right_sidebar">
+									<div class="tour_details_right_boxed">
+										<div class="tour_details_right_box_heading">
+											<h3>거래 등록</h3>
+										</div>
+										<div class="valid_date_area">
+											<div class="valid_date_area_one">
+												<h5>보유 주식 수</h5>
+												<p class="myStockAmount"></p>
+											</div>
+											<div class="valid_date_area_one">
+												<h5>보유 포인트</h5>
+												<p class="myPoint"></p>
+											</div>
+										</div>
+										<div class="tour_package_details_bar_list">
+											<h5>등록 정보</h5>
+											<div class="tour_package_bar_price">
+											<ul>
+											<li><label for="sub_price">가격</label>
+											<input type="number" id="sub_price" name="amount" min="1">
+											<li><label for="sub_amount">수량</label>
+											<input type="number" id="sub_amount" min="1"></li>
+											<input type="checkbox" name="price" class="marketprice">시장가</li>
+											<li><input class="askradio" type="radio" name="type" value="S" checked>매도<input class="bidradio" type="radio" name="type" value="B">매수</li>
+											</ul>
+											</div>
+										</div>
+									</div>
+									<div class="tour_select_offer_bar_bottom">
+										<button class="btn btn_theme btn_md w-100 submitBtn">등록</button>
+									</div>
+								</div>
+								<div class="tour_detail_right_sidebar">
+									<div class="tour_details_right_boxed">
+										<div class="tour_details_right_box_heading">
+											<h3>보유 주식 리스트</h3>
+										</div>
+										<div class="valid_date_area">
+											<ul class="myStockList">
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+
+			<div class="go-top">
+				<i class="fas fa-chevron-up"></i> <i class="fas fa-chevron-up"></i>
+			</div>
+
+			<!-- 거래 내역 조회 모달 -->
+			<div class="modal fade" id="exchangeModal" tabindex="-1"
+				aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered  modal-lg">
+					<div class="modal-content">
+						<div class="btn_modal_closed btn_modal_bus">
+							<button type="button" id="close">
+								<i class="fas fa-times"></i>
+							</button>
+						</div>
+						<div class="modal-body bus_set_modal_content" style="overflow:auto; height:800px;">
+							<div class="bus_modal_heading">
+								<h3>거래내역</h3>
+							</div>
+							<hr>
+							<div class="row">
+								<div class="col-lg-12">
+									<div class="exchangeDiv">
+										<table class="table">
+											<thead>
+												<tr>
+													<th>거래번호</th>
+													<th>거래가</th>
+													<th>거래수량</th>
+													<th>거래종류</th>
+													<th>종목</th>
+													<th>체결여부</th>
+													<th>등록일시</th>
+													<th>체결일시</th>
+												</tr>
+											</thead>
+											<tbody class="tbody">
+											</tbody>
+										</table>
+										
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<script th:inline="javascript">
+				$('#close').on('click', function() {
+					$("#exchangeModal").modal('hide');
+				})
+			</script>			
+						
+			
+			<script type="text/javascript"
+				src="https://www.gstatic.com/charts/loader.js"></script>
+
+			<script th:inline="javascript">
+				/*<![CDATA[*/
+					const stockId = [[${stockId}]];
+					const memberId = [[${memberId}]];
+				/*]]>*/
+			</script>
+				<script th:src="@{/influencer/js/stock_detail.js}"></script>
+		</th:block>
+	</div>
+	
+</body>
+
+</html>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.yedam.app.common.mapper.MemberMapper">
+  <select id="getMemberInfo" parameterType="String" resultType="MemberVO">
+  	select * from member where member_id = #{id}
+  </select>
+  <insert id="insertMember" parameterType="MemberVO">
+  	insert into member(member_id, member_name, member_phone, member_ssh, member_addr, member_pw, member_email)
+  	values(#{memberId}, #{memberName}, #{memberPhone}, #{memberSsh}, #{memberAddr}, #{memberPw}, #{memberEmail})
+  </insert>
+   <insert id="kakaoInsertMember" parameterType="MemberVO">
+  	insert into member(member_id, member_name, member_email, member_age, member_gender)
+  	values(#{memberId}, #{memberName}, #{memberEmail}, #{memberAge}, #{memberGender})
+  </insert>
+  <insert id="sellerInsertMember" parameterType="MemberVO">
+  	insert into member(member_id, member_name, member_phone, member_crn, member_addr, member_pw, member_email, member_grade)
+  	values(#{memberId}, #{memberName}, #{memberPhone}, #{memberCrn}, #{memberAddr}, #{memberPw}, #{memberEmail}, 'S')
+  </insert>
+  <select id="getMemberWithCrn" parameterType="String" resultType="MemberVO">
+  select * from member where member_crn = #{crn}
+  </select>
+  <select id="getMemberWithSsh" parameterType="String" resultType="MemberVO">
+  select * from member where member_ssh = #{ssh}
+  </select>
+   <select id="allMemberList" resultType="MemberVO">
+	<![CDATA[
+	select * from member
+	where member_grade <> 'A'
+	order by member_id asc
+	]]>
+  </select>
+  <select id="getBlackList" resultType="MemberVO">
+	select * from member
+	where member_grade = 'B'
+	order by black_end desc
+  </select>
+  <update id="insertBlackList" parameterType="ReportVO">
+  	update member
+  	set member_grade = 'B', black_end = sysdate+14
+  	where member_id = #{reportedId}
+  </update>
+  <select id="forgot" parameterType="MemberVO" resultType="MemberVO">
+  	select member_id, member_grade, member_pw from member
+  	where member_ssh = #{memberSsh}
+  </select>
+  <update id="temporaryPw" parameterType="MemberVO">
+  	update member
+  	set member_pw = #{memberPw}
+  	where member_ssh = #{memberSsh}
+  </update>
+  <select id="getTravelPlace" resultType="CityVO">
+  <![CDATA[
+  	select rownum num, b.*
+	from(select rownum, a.*
+			from(select *
+				   from city join (select city, count(city)as count
+                					  from planner
+                					 group by city) plan
+				     on city.city = plan.city
+				  order by count desc) a
+			where rownum < 15
+			order by dbms_random.value) b
+	where rownum <= 3
+	]]>
+  </select>
+  <select id="getInfluencerList" resultType="InfluencerVO">
+  <![CDATA[
+  	select *
+	from(select rownum, a.*
+			from(select follow_id, count(follow_id) as count
+					from follow
+					group by follow_id)a
+			order by count desc)
+	where rownum <= 6
+	]]>
+  </select>
+  <select id ="getPlanList" resultType="PlannerVO">
+  <![CDATA[
+  	select rownum, a.*, city.city_name, city.city_img
+	from(select *
+			from planner
+			order by plan_like desc)a join city
+	on a.city = city.city
+	where rownum <= 15
+	]]>
+  </select>
+  <select id="memberPhoto" parameterType="String" resultType="String">
+  select member_photo from member
+  where member_id = #{id} 
+  </select>
+  </mapper>
